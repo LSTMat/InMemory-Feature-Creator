@@ -1,0 +1,1203 @@
+<?xml version="1.0" encoding="utf-16"?>
+<Model xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <Name>Aptean Planning In Memory 2024.3.0.3</Name>
+  <Tables>
+    <Table SchemaName="dbo" TableName="CEAutomaticCalculationPlanParameter" DELETE="false">
+      <Columns>
+        <Column Name="FeatureKey" Type="Integer" IsPK="true" IsAK="true" />
+        <Column Name="SourceViewKey" Type="Integer" IsPK="true" IsAK="true" />
+        <Column Name="MainDriveTableID" Type="String" />
+      </Columns>
+    </Table>
+    <Table SchemaName="dbo" TableName="CECalculationPlanLevelSetting" DELETE="false">
+      <Columns>
+        <Column Name="CalculationPlanID" Type="String" IsPK="true" IsAK="true" />
+        <Column Name="LevelID" Type="String" IsPK="true" IsAK="true" />
+        <Column Name="TaskLoaderFullReloadThreshold" Type="Integer" />
+        <Column Name="TaskLoaderUseMaterializedFullLoading" Type="String" />
+        <Column Name="TaskLoaderUseMaterializedIncrementalLoading" Type="String" />
+        <Column Name="TaskSplitMassiveSplitThreshold" Type="Integer" />
+        <Column Name="TaskSaverMassiveSaveThreshold" Type="Integer" />
+        <Column Name="TaskSaverSqlMergeStatementUseMaxDOP" Type="Integer" />
+        <Column Name="TaskSplitAllowWriteOnPartiallyMappedKeys" Type="String" />
+        <Column Name="ModifiedDate" Type="DateTime" />
+        <Column Name="TaskLoaderUseMaterializedDriverTable" Type="String" />
+        <Column Name="ModifiedTimeStampTablesOfDriverTable" Type="String" />
+      </Columns>
+    </Table>
+    <Table SchemaName="dbo" TableName="CECalculationPlanSetting" DELETE="false">
+      <Columns>
+        <Column Name="CalculationPlanID" Type="String" IsPK="true" IsAK="true" />
+        <Column Name="InjectTuplesInMemory" Type="String" />
+        <Column Name="QueryHints" Type="String" />
+        <Column Name="ModifiedDate" Type="DateTime" />
+        <Column Name="LoadTimeout" Type="Integer" />
+        <Column Name="MaxNumberOfCellsPerLevel" Type="Integer" />
+      </Columns>
+    </Table>
+    <Table SchemaName="dbo" TableName="DMActionCustomization" DELETE="false">
+      <Columns>
+        <Column Name="ActionId" Type="String" IsPK="true" IsAK="true" />
+        <Column Name="TargetApp" Type="String" IsPK="true" IsAK="true" />
+        <Column Name="Customization" Type="Binary" />
+      </Columns>
+    </Table>
+    <Table SchemaName="dbo" TableName="DMAlgorithmConfiguration" DELETE="false">
+      <Columns>
+        <Column Name="AlgorithmConfigurationID" Type="String" IsPK="true" IsAK="true" />
+        <Column Name="DisplayName" Type="String" />
+        <Column Name="BusinessDescription" Type="String" />
+        <Column Name="Grouping" Type="String" />
+        <Column Name="OperatorID" Type="String" />
+        <Column Name="CalculationPlanID" Type="String" />
+        <Column Name="WorkbookID" Type="String" />
+        <Column Name="ReloadBeforeRun" Type="Integer" />
+      </Columns>
+    </Table>
+    <Table SchemaName="dbo" TableName="DMAlgorithmConfigurationLevel" DELETE="false">
+      <Columns>
+        <Column Name="AlgorithmConfigurationID" Type="String" IsPK="true" IsAK="true" />
+        <Column Name="LevelOperation" Type="String" IsPK="true" IsAK="true" />
+        <Column Name="LevelID" Type="String" />
+      </Columns>
+    </Table>
+    <Table SchemaName="dbo" TableName="DMAlgorithmConfigurationLevelParameter" DELETE="false">
+      <Columns>
+        <Column Name="AlgorithmConfigurationID" Type="String" IsPK="true" IsAK="true" />
+        <Column Name="LevelOperation" Type="String" IsPK="true" IsAK="true" />
+        <Column Name="ParameterID" Type="String" IsPK="true" IsAK="true" />
+        <Column Name="ParameterValue" Type="String" />
+      </Columns>
+    </Table>
+    <Table SchemaName="dbo" TableName="DMAlignment" DELETE="false">
+      <Columns>
+        <Column Name="AlignmentId" Type="String" IsPK="true" IsAK="true" />
+        <Column Name="AlignmentName" Type="String" />
+        <Column Name="Wrap" Type="Integer" />
+        <Column Name="AlignmentHorizontal" Type="String" />
+        <Column Name="AlignmentVertical" Type="String" />
+      </Columns>
+    </Table>
+    <Table SchemaName="dbo" TableName="DMApplicationLayout" DELETE="false">
+      <Columns>
+        <Column Name="ApplicationLayoutID" Type="String" IsPK="true" IsAK="true" />
+        <Column Name="PackageID" Type="String" />
+        <Column Name="TargetApp" Type="String" />
+        <Column Name="Container" Type="String" />
+        <Column Name="ParentSection" Type="String" />
+        <Column Name="Section" Type="String" />
+        <Column Name="Description" Type="String" />
+        <Column Name="ControlType" Type="String" />
+        <Column Name="ControlSize" Type="String" />
+        <Column Name="SequenceNo" Type="Integer" />
+        <Column Name="Icon" Type="Binary" />
+        <Column Name="ShowContextMenu" Type="Integer" />
+        <Column Name="EnabledOnEdit" Type="Integer" />
+        <Column Name="VariableID" Type="String" />
+        <Column Name="IconVersion" Type="Integer" />
+        <Column Name="IconName" Type="String" />
+        <Column Name="IsText" Type="Integer" />
+      </Columns>
+    </Table>
+    <Table SchemaName="dbo" TableName="DMBorder" DELETE="false">
+      <Columns>
+        <Column Name="BorderId" Type="String" IsPK="true" IsAK="true" />
+        <Column Name="BorderName" Type="String" />
+        <Column Name="ColorId" Type="String" />
+        <Column Name="BorderStyleLeft" Type="String" />
+        <Column Name="BorderStyleTop" Type="String" />
+        <Column Name="BorderStyleRight" Type="String" />
+        <Column Name="BorderStyleBottom" Type="String" />
+        <Column Name="BorderStyleInsideVertical" Type="String" />
+        <Column Name="BorderStyleInsideHorizontal" Type="String" />
+      </Columns>
+    </Table>
+    <Table SchemaName="dbo" TableName="DMBusinessSolverSetting" DELETE="false">
+      <Columns>
+        <Column Name="BusinessSolverID" Type="String" IsPK="true" IsAK="true" />
+        <Column Name="BusinessSolverParameterID" Type="String" IsPK="true" IsAK="true" />
+        <Column Name="VariableID" Type="String" />
+        <Column Name="DefaultVariableID" Type="String" />
+      </Columns>
+    </Table>
+    <Table SchemaName="dbo" TableName="DMCalculationPlan" DELETE="false">
+      <Columns>
+        <Column Name="CalculationPlanID" Type="String" IsPK="true" IsAK="true" />
+        <Column Name="DisplayName" Type="String" />
+        <Column Name="BusinessDescription" Type="String" />
+        <Column Name="Grouping" Type="String" />
+        <Column Name="TranslationsDataEntry" Type="Integer" />
+        <Column Name="CompileAtDeploy" Type="Integer" />
+        <Column Name="BusinessSolverAssociated" Type="String" />
+        <Column Name="UseTemplateGroup" Type="Integer" />
+      </Columns>
+    </Table>
+    <Table SchemaName="dbo" TableName="DMCalculationPlanColumnParameter" DELETE="false">
+      <Columns>
+        <Column Name="LevelID" Type="String" IsPK="true" IsAK="true" />
+        <Column Name="UniqueColumnId" Type="String" IsPK="true" IsAK="true" />
+        <Column Name="OperatorID" Type="String" IsPK="true" IsAK="true" />
+        <Column Name="ParameterID" Type="String" IsPK="true" IsAK="true" />
+        <Column Name="ParameterValue" Type="String" />
+      </Columns>
+    </Table>
+    <Table SchemaName="dbo" TableName="DMCalculationPlanLevel" DELETE="false">
+      <Columns>
+        <Column Name="LevelID" Type="String" IsPK="true" IsAK="true" />
+        <Column Name="CalculationPlanID" Type="String" />
+        <Column Name="DisplayName" Type="String" />
+        <Column Name="DriverModelID" Type="String" />
+        <Column Name="UsageType" Type="String" />
+        <Column Name="GraphX" Type="Integer" />
+        <Column Name="GraphY" Type="Integer" />
+        <Column Name="HasKeys" Type="Integer" />
+        <Column Name="SQLOverride" Type="String" />
+      </Columns>
+    </Table>
+    <Table SchemaName="dbo" TableName="DMCalculationPlanLevelColumn" DELETE="false">
+      <Columns>
+        <Column Name="LevelID" Type="String" IsPK="true" IsAK="true" />
+        <Column Name="UniqueColumnId" Type="String" IsPK="true" IsAK="true" />
+        <Column Name="AggregateOperatorId" Type="String" />
+        <Column Name="WriteOperatorId" Type="String" />
+        <Column Name="KeySequenceNo" Type="Integer" />
+        <Column Name="SourceViewColumnId" Type="String" />
+        <Column Name="VariableSequenceNo" Type="Integer" />
+        <Column Name="WriteOverride" Type="Integer" />
+        <Column Name="AggregateOverride" Type="Integer" />
+        <Column Name="JoinOperatorID" Type="String" />
+        <Column Name="SourceCalculationLevelId" Type="String" />
+        <Column Name="FilterOutputKeySequence" Type="Integer" />
+        <Column Name="TotalsAggregateOperatorId" Type="String" />
+        <Column Name="TotalsWriteOperatorId" Type="String" />
+        <Column Name="DomainID" Type="String" />
+        <Column Name="FilterOutputKeyGroup" Type="String" />
+      </Columns>
+    </Table>
+    <Table SchemaName="dbo" TableName="DMCalculationPlanLevelDataConstraint" DELETE="false">
+      <Columns>
+        <Column Name="LevelID" Type="String" IsPK="true" IsAK="true" />
+        <Column Name="ConditionID" Type="String" IsPK="true" IsAK="true" />
+        <Column Name="SequenceNo" Type="Integer" />
+        <Column Name="Bracket" Type="String" />
+        <Column Name="BoolOperator" Type="String" />
+        <Column Name="VariableUniqueColumnId" Type="String" />
+        <Column Name="ConditionOperator" Type="String" />
+        <Column Name="ComparedToUniqueColumnId" Type="String" />
+        <Column Name="ComparedToConstant" Type="String" />
+      </Columns>
+    </Table>
+    <Table SchemaName="dbo" TableName="DMCalculationPlanLink" DELETE="false">
+      <Columns>
+        <Column Name="FromLevelID" Type="String" IsPK="true" IsAK="true" />
+        <Column Name="ToLevelID" Type="String" IsPK="true" IsAK="true" />
+        <Column Name="CalculationPlanID" Type="String" />
+        <Column Name="LinkType" Type="String" />
+      </Columns>
+    </Table>
+    <Table SchemaName="dbo" TableName="DMColor" DELETE="false">
+      <Columns>
+        <Column Name="ColorId" Type="String" IsPK="true" IsAK="true" />
+        <Column Name="ColorName" Type="String" />
+        <Column Name="Red" Type="Integer" />
+        <Column Name="Green" Type="Integer" />
+        <Column Name="Blue" Type="Integer" />
+        <Column Name="Alpha" Type="Integer" />
+      </Columns>
+    </Table>
+    <Table SchemaName="dbo" TableName="DMColorSchema" DELETE="false">
+      <Columns>
+        <Column Name="ColorSchemaID" Type="String" IsPK="true" IsAK="true" />
+        <Column Name="ColorSequence" Type="Integer" />
+        <Column Name="ColorID" Type="String" IsPK="true" IsAK="true" />
+      </Columns>
+    </Table>
+    <Table SchemaName="dbo" TableName="DMComment" DELETE="false">
+      <Columns>
+        <Column Name="CommentCategory" Type="String" IsPK="true" IsAK="true" />
+        <Column Name="ModelID" Type="String" IsPK="true" IsAK="true" />
+        <Column Name="Comment" Type="String" />
+      </Columns>
+    </Table>
+    <Table SchemaName="dbo" TableName="DMCommentTranslation" DELETE="false">
+      <Columns>
+        <Column Name="LanguageCulture" Type="String" IsPK="true" IsAK="true" />
+        <Column Name="CommentCategory" Type="String" IsPK="true" IsAK="true" />
+        <Column Name="ModelID" Type="String" IsPK="true" IsAK="true" />
+        <Column Name="Comment" Type="String" />
+      </Columns>
+    </Table>
+    <Table SchemaName="dbo" TableName="DMCondition" DELETE="false">
+      <Columns>
+        <Column Name="ConditionId" Type="String" IsPK="true" IsAK="true" />
+        <Column Name="ConditionName" Type="String" />
+        <Column Name="DisplayNameRule" Type="String" />
+        <Column Name="DataFormatRule" Type="String" />
+        <Column Name="EditabilityFormula" Type="String" />
+        <Column Name="EditabilityFormatRule" Type="String" />
+        <Column Name="Description" Type="String" />
+        <Column Name="EditabilityFormat" Type="String" />
+        <Column Name="ReadOnlyFormat" Type="String" />
+        <Column Name="DataFormat" Type="String" />
+        <Column Name="DisplayNameFormat" Type="String" />
+        <Column Name="System" Type="Integer" />
+      </Columns>
+    </Table>
+    <Table SchemaName="dbo" TableName="DMCustomization" DELETE="false">
+      <Columns>
+        <Column Name="CustomizationID" Type="String" IsPK="true" IsAK="true" />
+        <Column Name="WorkbookID" Type="String" />
+        <Column Name="DisplayName" Type="String" />
+        <Column Name="TargetApp" Type="String" />
+        <Column Name="OwnerAliasID" Type="String" />
+        <Column Name="BusinessDescription" Type="String" />
+        <Column Name="ExcelWorkbook" Type="Binary" />
+        <Column Name="ExcelMacroEnabled" Type="Integer" />
+        <Column Name="ModelerCustomization" Type="Integer" DataFilter="1" />
+        <Column Name="FolderLocation" Type="String" />
+        <Column Name="ParentCustomizationID" Type="String" />
+        <Column Name="CreationDomainUserName" Type="String" />
+        <Column Name="CreationDate" Type="DateTime" />
+        <Column Name="ModifiedDomainUserName" Type="String" />
+        <Column Name="ModifiedDate" Type="DateTime" />
+      </Columns>
+    </Table>
+    <Table SchemaName="dbo" TableName="DMCustomizationAppSetting" DELETE="false">
+      <Columns>
+        <Column Name="CustomizationID" Type="String" IsPK="true" IsAK="true" />
+        <Column Name="TargetApp" Type="String" />
+        <Column Name="SettingKey" Type="String" IsPK="true" IsAK="true" />
+        <Column Name="SettingValue" Type="String" />
+      </Columns>
+    </Table>
+    <Table SchemaName="dbo" TableName="DMCustomizationFilter" DELETE="false">
+      <Columns>
+        <Column Name="CustomizationID" Type="String" IsPK="true" IsAK="true" />
+        <Column Name="EntityModelID" Type="String" IsPK="true" IsAK="true" />
+        <Column Name="EntityExternalID" Type="String" IsPK="true" IsAK="true" />
+        <Column Name="Context" Type="String" IsPK="true" IsAK="true" />
+        <Column Name="PropertyId" Type="String" IsPK="true" IsAK="true" />
+      </Columns>
+    </Table>
+    <Table SchemaName="dbo" TableName="DMCustomizationViewVariable" DELETE="false">
+      <Columns>
+        <Column Name="CustomizationID" Type="String" IsPK="true" IsAK="true" />
+        <Column Name="ViewID" Type="String" IsPK="true" IsAK="true" />
+        <Column Name="SourceViewID" Type="String" IsPK="true" IsAK="true" />
+        <Column Name="SourceViewColumnId" Type="String" IsPK="true" IsAK="true" />
+        <Column Name="Visible" Type="Integer" />
+        <Column Name="PresentationGroupBy" Type="Integer" />
+        <Column Name="PresentationGroupDefault" Type="Integer" />
+        <Column Name="PresentationColumnGroupBy" Type="Integer" />
+        <Column Name="PresentationColumnGroupDefault" Type="Integer" />
+        <Column Name="PresentationFilterBy" Type="Integer" />
+        <Column Name="PresentationSortBy" Type="Integer" />
+        <Column Name="PresentationSortByDefault" Type="Integer" />
+        <Column Name="PresentationSortDirection" Type="String" />
+        <Column Name="InformationLine" Type="Integer" />
+        <Column Name="SequenceNo" Type="Integer" />
+      </Columns>
+    </Table>
+    <Table SchemaName="dbo" TableName="DMDashboardBar" DELETE="false">
+      <Columns>
+        <Column Name="StyleID" Type="String" IsPK="true" IsAK="true" />
+        <Column Name="Orientation" Type="String" />
+        <Column Name="ColorSchemaID" Type="String" />
+        <Column Name="ShowAxis" Type="Integer" />
+        <Column Name="ShowGridlines" Type="Integer" />
+        <Column Name="ColorGridLines" Type="String" />
+        <Column Name="ShowDataLabel" Type="Integer" />
+        <Column Name="ShowLegend" Type="Integer" />
+        <Column Name="LegendPosition" Type="String" />
+        <Column Name="BarsPadding" Type="Integer" />
+        <Column Name="GroupsPadding" Type="Integer" />
+        <Column Name="CardTextColorID" Type="String" />
+        <Column Name="CardColorID" Type="String" />
+        <Column Name="CardColorSchemaID" Type="String" />
+        <Column Name="TooltipEnabled" Type="Integer" />
+        <Column Name="NavigatorEnabled" Type="Integer" />
+      </Columns>
+    </Table>
+    <Table SchemaName="dbo" TableName="DMDashboardCard" DELETE="false">
+      <Columns>
+        <Column Name="StyleID" Type="String" IsPK="true" IsAK="true" />
+        <Column Name="TextColorID" Type="String" />
+        <Column Name="CardColorID" Type="String" />
+        <Column Name="ColorSchemaID" Type="String" />
+      </Columns>
+    </Table>
+    <Table SchemaName="dbo" TableName="DMDashboardColumn" DELETE="false">
+      <Columns>
+        <Column Name="StyleID" Type="String" IsPK="true" IsAK="true" />
+        <Column Name="ColorSchemaID" Type="String" />
+        <Column Name="ShowAxis" Type="Integer" />
+        <Column Name="ShowGridlines" Type="Integer" />
+        <Column Name="ColorGridLines" Type="String" />
+        <Column Name="ShowDataLabel" Type="Integer" />
+        <Column Name="ShowLegend" Type="Integer" />
+        <Column Name="LegendPosition" Type="String" />
+        <Column Name="BarsPadding" Type="Integer" />
+        <Column Name="GroupsPadding" Type="Integer" />
+        <Column Name="TooltipEnabled" Type="Integer" />
+        <Column Name="NavigatorEnabled" Type="Integer" />
+      </Columns>
+    </Table>
+    <Table SchemaName="dbo" TableName="DMDashboardLineArea" DELETE="false">
+      <Columns>
+        <Column Name="StyleID" Type="String" IsPK="true" IsAK="true" />
+        <Column Name="ColorSchemaID" Type="String" />
+        <Column Name="ShowAxis" Type="Integer" />
+        <Column Name="ShowGridlines" Type="Integer" />
+        <Column Name="ColorGridLines" Type="String" />
+        <Column Name="ShowDataLabel" Type="Integer" />
+        <Column Name="ShowLegend" Type="Integer" />
+        <Column Name="LegendPosition" Type="String" />
+        <Column Name="BarsPadding" Type="Integer" />
+        <Column Name="GroupsPadding" Type="Integer" />
+        <Column Name="TooltipEnabled" Type="Integer" />
+        <Column Name="NavigatorEnabled" Type="Integer" />
+        <Column Name="MarkerEnabled" Type="Integer" />
+      </Columns>
+    </Table>
+    <Table SchemaName="dbo" TableName="DMDashboardPie" DELETE="false">
+      <Columns>
+        <Column Name="StyleID" Type="String" IsPK="true" IsAK="true" />
+        <Column Name="ColorSchemaID" Type="String" />
+        <Column Name="ShowAxis" Type="Integer" />
+        <Column Name="ShowGridlines" Type="Integer" />
+        <Column Name="ColorGridLines" Type="String" />
+        <Column Name="ShowDataLabel" Type="Integer" />
+        <Column Name="ShowLegend" Type="Integer" />
+        <Column Name="LegendPosition" Type="String" />
+        <Column Name="BarsPadding" Type="Integer" />
+        <Column Name="GroupsPadding" Type="Integer" />
+        <Column Name="TooltipEnabled" Type="Integer" />
+      </Columns>
+    </Table>
+    <Table SchemaName="dbo" TableName="DMDomain" DELETE="false">
+      <Columns>
+        <Column Name="DomainID" Type="String" IsPK="true" IsAK="true" />
+        <Column Name="Name" Type="String" />
+        <Column Name="Description" Type="String" />
+        <Column Name="PresentationType" Type="String" />
+        <Column Name="Type" Type="String" />
+        <Column Name="UseFilters" Type="Integer" />
+        <Column Name="EntityID" Type="String" />
+        <Column Name="LookupOperatorID" Type="String" />
+        <Column Name="WebPresentationType" Type="String" />
+        <Column Name="FilterOutputUniqueColumnIds" Type="String" />
+        <Column Name="PresentOnlyOnce" Type="Integer" />
+        <Column Name="ReducedBy" Type="String" />
+        <Column Name="UseAsDynamicDomain" Type="Integer" />
+      </Columns>
+    </Table>
+    <Table SchemaName="dbo" TableName="DMDomainDetail" DELETE="false">
+      <Columns>
+        <Column Name="DomainID" Type="String" IsPK="true" IsAK="true" />
+        <Column Name="SequenceNo" Type="Integer" IsPK="true" IsAK="true" />
+        <Column Name="PropertyID" Type="String" />
+        <Column Name="UniqueColumnId" Type="String" />
+        <Column Name="Usage" Type="String" />
+        <Column Name="LookupParameterID" Type="String" />
+      </Columns>
+    </Table>
+    <Table SchemaName="dbo" TableName="DMFilterConstraint" DELETE="false">
+      <Columns>
+        <Column Name="WorkbookId" Type="String" IsPK="true" IsAK="true" />
+        <Column Name="ConstraintId" Type="String" IsPK="true" IsAK="true" />
+        <Column Name="ModelId" Type="String" />
+        <Column Name="UniqueColumnId" Type="String" />
+        <Column Name="Context" Type="String" />
+        <Column Name="FilterUsage" Type="String" />
+        <Column Name="RequiresSource" Type="Integer" />
+        <Column Name="ConnectionId" Type="String" />
+        <Column Name="SourceType" Type="String" />
+        <Column Name="CommandText" Type="String" />
+        <Column Name="AliasSpecific" Type="Integer" />
+        <Column Name="Dynamic" Type="Integer" />
+        <Column Name="UniqueDeploymentId" Type="String" />
+      </Columns>
+    </Table>
+    <Table SchemaName="dbo" TableName="DMFilterCriteria" DELETE="false">
+      <Columns>
+        <Column Name="WorkbookId" Type="String" IsPK="true" IsAK="true" />
+        <Column Name="FilterId" Type="String" IsPK="true" IsAK="true" />
+        <Column Name="UniqueColumnId" Type="String" />
+        <Column Name="Area" Type="String" />
+        <Column Name="PresentLastSelection" Type="Integer" />
+        <Column Name="SaveInCustom" Type="Integer" />
+        <Column Name="SelectionType" Type="String" />
+        <Column Name="Visible" Type="Integer" />
+        <Column Name="Mandatory" Type="Integer" />
+        <Column Name="SequenceNo" Type="Integer" />
+        <Column Name="RequiresSource" Type="Integer" />
+        <Column Name="ConnectionId" Type="String" />
+        <Column Name="SourceType" Type="String" />
+        <Column Name="CommandText" Type="String" />
+        <Column Name="AliasSpecific" Type="Integer" />
+        <Column Name="Dynamic" Type="Integer" />
+        <Column Name="UniqueDeploymentId" Type="String" />
+        <Column Name="AttributeGroupStrategyId" Type="String" />
+        <Column Name="BlockCriteria" Type="Integer" />
+        <Column Name="MaxNumberByBlock" Type="Integer" />
+        <Column Name="VisibleInReport" Type="Integer" />
+      </Columns>
+    </Table>
+    <Table SchemaName="dbo" TableName="DMFilterLocal" DELETE="false">
+      <Columns>
+        <Column Name="WorkbookId" Type="String" IsPK="true" IsAK="true" />
+        <Column Name="FilterId" Type="String" IsPK="true" IsAK="true" />
+        <Column Name="ViewId" Type="String" IsPK="true" IsAK="true" />
+        <Column Name="Context" Type="String" />
+        <Column Name="UniqueDeploymentId" Type="String" />
+      </Columns>
+    </Table>
+    <Table SchemaName="dbo" TableName="DMFilterOutput" DELETE="false">
+      <Columns>
+        <Column Name="WorkbookId" Type="String" IsPK="true" IsAK="true" />
+        <Column Name="FilterOutputModelId" Type="String" IsPK="true" IsAK="true" />
+        <Column Name="ViewListIsExcluded" Type="Integer" />
+        <Column Name="UniqueDeploymentId" Type="String" />
+      </Columns>
+    </Table>
+    <Table SchemaName="dbo" TableName="DMFilterOutputExclusion" DELETE="false">
+      <Columns>
+        <Column Name="WorkbookId" Type="String" IsPK="true" IsAK="true" />
+        <Column Name="FilterOutputModelId" Type="String" IsPK="true" IsAK="true" />
+        <Column Name="UniqueDeploymentId" Type="String" />
+      </Columns>
+    </Table>
+    <Table SchemaName="dbo" TableName="DMFilterOutputView" DELETE="false">
+      <Columns>
+        <Column Name="WorkbookId" Type="String" IsPK="true" IsAK="true" />
+        <Column Name="FilterOutputModelId" Type="String" IsPK="true" IsAK="true" />
+        <Column Name="ViewId" Type="String" IsPK="true" IsAK="true" />
+      </Columns>
+    </Table>
+    <Table SchemaName="dbo" TableName="DMFont" DELETE="false">
+      <Columns>
+        <Column Name="FontId" Type="String" IsPK="true" IsAK="true" />
+        <Column Name="FontName" Type="String" />
+        <Column Name="Family" Type="String" />
+        <Column Name="Size" Type="Integer" />
+        <Column Name="ColorId" Type="String" />
+        <Column Name="FontStyle" Type="String" />
+        <Column Name="FontUnderline" Type="String" />
+        <Column Name="FontEffect" Type="String" />
+      </Columns>
+    </Table>
+    <Table SchemaName="dbo" TableName="DMFormat" DELETE="false">
+      <Columns>
+        <Column Name="FormatId" Type="String" IsPK="true" IsAK="true" />
+        <Column Name="FormatName" Type="String" />
+        <Column Name="BackColorId" Type="String" />
+        <Column Name="FontId" Type="String" />
+        <Column Name="BorderId" Type="String" />
+        <Column Name="AlignmentId" Type="String" />
+        <Column Name="IconId" Type="String" />
+        <Column Name="System" Type="Integer" />
+        <Column Name="Off" Type="Integer" />
+        <Column Name="Description" Type="String" />
+        <Column Name="ForeColorId" Type="String" />
+      </Columns>
+    </Table>
+    <Table SchemaName="dbo" TableName="DMLanguage" DELETE="false">
+      <Columns>
+        <Column Name="LanguageCulture" Type="String" IsPK="true" IsAK="true" />
+        <Column Name="LanguageDisplayName" Type="String" />
+        <Column Name="Localized" Type="Integer" />
+        <Column Name="LocalizedLanguageCulture" Type="String" />
+        <Column Name="Visible" Type="Integer" />
+        <Column Name="SelectedCollation" Type="String" />
+        <Column Name="DataTranslation" Type="Integer" />
+        <Column Name="InvariantLanguage" Type="Integer" />
+      </Columns>
+    </Table>
+    <Table SchemaName="dbo" TableName="DMModelTable" DELETE="false">
+      <Columns>
+        <Column Name="ModelID" Type="String" IsPK="true" IsAK="true" />
+        <Column Name="DisplayName" Type="String" />
+        <Column Name="PhysicalName" Type="String" />
+        <Column Name="Partitioned" Type="Integer" />
+        <Column Name="Managed" Type="Integer" />
+        <Column Name="ModelType" Type="String" />
+        <Column Name="ColumnStore" Type="Integer" />
+        <Column Name="Grouping" Type="String" />
+        <Column Name="AliasSpecific" Type="Integer" />
+        <Column Name="SystemStatus" Type="Integer" />
+      </Columns>
+    </Table>
+    <Table SchemaName="dbo" TableName="DMModelTableColumn" DELETE="false">
+      <Columns>
+        <Column Name="ModelID" Type="String" IsPK="true" IsAK="true" ReferenceTableSchema="dbo" ReferenceTableName="DMModelTable" ReferenceColumn="ModelID" />
+        <Column Name="FieldName" Type="String" IsPK="true" IsAK="true" />
+        <Column Name="DisplayNameOverride" Type="String" />
+        <Column Name="FieldType" Type="String" />
+        <Column Name="ReferenceModelID" Type="String" />
+        <Column Name="ReferenceLinkID" Type="String" />
+        <Column Name="SequenceNo" Type="Integer" />
+        <Column Name="IncludeInRunScope" Type="Integer" />
+        <Column Name="DefaultValue" Type="String" />
+        <Column Name="OldFieldName" Type="String" />
+        <Column Name="UniqueColumnId" Type="String" />
+        <Column Name="DefaultReference" Type="String" />
+        <Column Name="OverrideReference" Type="String" />
+        <Column Name="ValueSortColumn" Type="String" />
+        <Column Name="ValueSortDirection" Type="String" />
+        <Column Name="Cardinality" Type="String" />
+        <Column Name="Translated" Type="Integer" />
+        <Column Name="AttributesGroupName" Type="String" />
+        <Column Name="AutoFilter" Type="Integer" />
+        <Column Name="AutoFilterSequence" Type="Integer" />
+        <Column Name="Upload" Type="Integer" />
+        <Column Name="NamedFilter" Type="Integer" />
+      </Columns>
+    </Table>
+    <Table SchemaName="dbo" TableName="DMModelTableIndex" DELETE="false">
+      <Columns>
+        <Column Name="ModelID" Type="String" IsPK="true" IsAK="true" />
+        <Column Name="IndexName" Type="String" IsPK="true" IsAK="true" />
+        <Column Name="SQLDefinition" Type="String" />
+      </Columns>
+    </Table>
+    <Table SchemaName="dbo" TableName="DMPackage" DELETE="false">
+      <Columns>
+        <Column Name="PackageID" Type="String" IsPK="true" IsAK="true" />
+        <Column Name="DisplayName" Type="String" />
+        <Column Name="BusinessDescription" Type="String" />
+        <Column Name="ActivationMode" Type="String" />
+        <Column Name="EnabledWhenNoData" Type="Integer" />
+        <Column Name="MultiSelection" Type="Integer" />
+      </Columns>
+    </Table>
+    <Table SchemaName="dbo" TableName="DMPackageAction" DELETE="false">
+      <Columns>
+        <Column Name="ActionID" Type="String" IsPK="true" IsAK="true" />
+        <Column Name="DisplayName" Type="String" />
+        <Column Name="BusinessDescription" Type="String" />
+        <Column Name="ActionType" Type="String" />
+        <Column Name="ProcessExecutionDefinition" Type="String" />
+        <Column Name="ArcaConnection" Type="Integer" />
+        <Column Name="SystemConnection" Type="Integer" />
+        <Column Name="DwhConnection" Type="Integer" />
+        <Column Name="Servername" Type="String" />
+        <Column Name="DatabaseName" Type="String" />
+        <Column Name="ShowCancelButton" Type="Integer" />
+        <Column Name="Undoable" Type="Integer" />
+        <Column Name="ViewId" Type="String" />
+        <Column Name="PropertyId" Type="String" />
+        <Column Name="Value" Type="String" />
+      </Columns>
+    </Table>
+    <Table SchemaName="dbo" TableName="DMPackageTask" DELETE="false">
+      <Columns>
+        <Column Name="PackageID" Type="String" IsPK="true" IsAK="true" />
+        <Column Name="ActionID" Type="String" IsPK="true" IsAK="true" />
+        <Column Name="UniqueId" Type="String" />
+        <Column Name="SequenceNo" Type="Integer" IsPK="true" IsAK="true" />
+        <Column Name="OnError" Type="String" />
+        <Column Name="OnErrorFormID" Type="String" />
+      </Columns>
+    </Table>
+    <Table SchemaName="dbo" TableName="DMPackageWorkbook" DELETE="false">
+      <Columns>
+        <Column Name="PackageID" Type="String" IsPK="true" IsAK="true" />
+        <Column Name="WorkbookID" Type="String" IsPK="true" IsAK="true" />
+        <Column Name="RoleID" Type="String" IsPK="true" IsAK="true" />
+      </Columns>
+    </Table>
+    <Table SchemaName="dbo" TableName="DMPackageWorkbookView" DELETE="false">
+      <Columns>
+        <Column Name="PackageID" Type="String" IsPK="true" IsAK="true" />
+        <Column Name="WorkbookID" Type="String" IsPK="true" IsAK="true" />
+        <Column Name="ViewID" Type="String" IsPK="true" IsAK="true" />
+      </Columns>
+    </Table>
+    <Table SchemaName="dbo" TableName="DMPartition" DELETE="false">
+      <Columns>
+        <Column Name="SchemaName" Type="String" IsPK="true" IsAK="true" />
+        <Column Name="ConnectionID" Type="String" />
+        <Column Name="Purpose" Type="String" />
+        <Column Name="ADUserGroup" Type="String" />
+        <Column Name="ADGroupTrust" Type="String" />
+      </Columns>
+    </Table>
+    <Table SchemaName="dbo" TableName="DMPartitionModel" DELETE="false">
+      <Columns>
+        <Column Name="EntityName" Type="String" IsPK="true" IsAK="true" />
+        <Column Name="EntityKeyField" Type="String" />
+      </Columns>
+    </Table>
+    <Table SchemaName="dbo" TableName="DMSimilarity" DELETE="false">
+      <Columns>
+        <Column Name="SimilarityID" Type="String" IsPK="true" IsAK="true" />
+        <Column Name="DisplayName" Type="String" />
+        <Column Name="BusinessDescription" Type="String" />
+        <Column Name="BaseModelId" Type="String" />
+        <Column Name="Active" Type="Integer" />
+        <Column Name="NumberOfSimilar" Type="Integer" />
+        <Column Name="Text" Type="Integer" />
+        <Column Name="Image" Type="Integer" />
+        <Column Name="ImageAttribute" Type="String" />
+        <Column Name="GroupModelId" Type="String" />
+        <Column Name="Attribute01" Type="String" />
+        <Column Name="Attribute02" Type="String" />
+        <Column Name="Attribute03" Type="String" />
+        <Column Name="Attribute04" Type="String" />
+        <Column Name="Attribute05" Type="String" />
+        <Column Name="Attribute06" Type="String" />
+        <Column Name="Attribute07" Type="String" />
+        <Column Name="Attribute08" Type="String" />
+        <Column Name="Attribute09" Type="String" />
+        <Column Name="Attribute10" Type="String" />
+        <Column Name="Attribute11" Type="String" />
+        <Column Name="Attribute12" Type="String" />
+        <Column Name="Attribute13" Type="String" />
+        <Column Name="Attribute14" Type="String" />
+        <Column Name="Attribute15" Type="String" />
+        <Column Name="Attribute16" Type="String" />
+        <Column Name="Attribute17" Type="String" />
+        <Column Name="Attribute18" Type="String" />
+        <Column Name="Attribute19" Type="String" />
+        <Column Name="Attribute20" Type="String" />
+        <Column Name="Attribute21" Type="String" />
+        <Column Name="Attribute22" Type="String" />
+        <Column Name="Attribute23" Type="String" />
+        <Column Name="Attribute24" Type="String" />
+        <Column Name="Attribute25" Type="String" />
+        <Column Name="Attribute26" Type="String" />
+        <Column Name="Attribute27" Type="String" />
+        <Column Name="Attribute28" Type="String" />
+        <Column Name="Attribute29" Type="String" />
+        <Column Name="Attribute30" Type="String" />
+      </Columns>
+    </Table>
+    <Table SchemaName="dbo" TableName="DMSourceView" DELETE="false">
+      <Columns>
+        <Column Name="SourceViewID" Type="String" IsPK="true" IsAK="true" />
+        <Column Name="SqlViewName" Type="String" />
+        <Column Name="DisplayName" Type="String" />
+        <Column Name="BusinessDescription" Type="String" />
+        <Column Name="Prototype" Type="Integer" />
+        <Column Name="CalculationPlanID" Type="String" />
+        <Column Name="LevelID" Type="String" />
+      </Columns>
+    </Table>
+    <Table SchemaName="dbo" TableName="DMSourceViewAggregate" DELETE="false">
+      <Columns>
+        <Column Name="SourceViewId" Type="String" IsPK="true" IsAK="true" />
+        <Column Name="SourceViewColumnId" Type="String" IsPK="true" IsAK="true" />
+        <Column Name="SQLViewName" Type="String" IsPK="true" IsAK="true" />
+      </Columns>
+    </Table>
+    <Table SchemaName="dbo" TableName="DMSourceViewColumn" DELETE="false">
+      <Columns>
+        <Column Name="SourceViewID" Type="String" IsPK="true" IsAK="true" ReferenceTableSchema="dbo" ReferenceTableName="DMSourceView" ReferenceColumn="SourceViewID" />
+        <Column Name="SourceViewColumnID" Type="String" IsPK="true" IsAK="true" />
+        <Column Name="Expression" Type="String" />
+        <Column Name="ModelObjectID" Type="String" />
+        <Column Name="PropertyID" Type="String" />
+        <Column Name="SortOrderSequence" Type="Integer" />
+        <Column Name="SortDirection" Type="String" />
+        <Column Name="KeyColumn" Type="Integer" />
+        <Column Name="Prototype" Type="Integer" />
+        <Column Name="HierarchyID" Type="String" />
+      </Columns>
+    </Table>
+    <Table SchemaName="dbo" TableName="DMSourceViewRunScope" DELETE="false">
+      <Columns>
+        <Column Name="SourceViewID" Type="String" IsPK="true" IsAK="true" />
+        <Column Name="StructureSetID" Type="String" IsPK="true" IsAK="true" />
+      </Columns>
+    </Table>
+    <Table SchemaName="dbo" TableName="DMSQLGenerator" DELETE="false">
+      <Columns>
+        <Column Name="QueryID" Type="String" IsPK="true" IsAK="true" />
+        <Column Name="WorkbookID" Type="String" />
+        <Column Name="ViewID" Type="String" />
+        <Column Name="SourceViewID" Type="String" />
+        <Column Name="CalculationPlanID" Type="String" />
+        <Column Name="LevelID" Type="String" />
+        <Column Name="SqlQuery" Type="String" />
+        <Column Name="ModifiedWhere" Type="String" />
+        <Column Name="DriverWhere" Type="String" />
+        <Column Name="DriverSQLStatement" Type="String" />
+        <Column Name="BaseDriverID" Type="String" />
+        <Column Name="IncrementalKeysQuery" Type="String" />
+      </Columns>
+    </Table>
+    <Table SchemaName="dbo" TableName="DMSQLObject" DELETE="false">
+      <Columns>
+        <Column Name="SchemaName" Type="String" IsPK="true" IsAK="true" />
+        <Column Name="ObjectType" Type="String" IsPK="true" IsAK="true" />
+        <Column Name="ObjectName" Type="String" IsPK="true" IsAK="true" />
+      </Columns>
+    </Table>
+    <Table SchemaName="dbo" TableName="DMStructureSet" DELETE="false">
+      <Columns>
+        <Column Name="StructureSetID" Type="String" IsPK="true" IsAK="true" />
+        <Column Name="DisplayName" Type="String" />
+        <Column Name="DriverModelID" Type="String" />
+        <Column Name="DriverAlias" Type="String" />
+        <Column Name="CacheRunScopeModelID" Type="String" />
+      </Columns>
+    </Table>
+    <Table SchemaName="dbo" TableName="DMStructureSetFilter" DELETE="false">
+      <Columns>
+        <Column Name="StructureSetID" Type="String" IsPK="true" IsAK="true" ReferenceTableSchema="dbo" ReferenceTableName="DMStructureSet" ReferenceColumn="StructureSetID" />
+        <Column Name="StructureSetFilterKey" Type="String" IsPK="true" IsAK="true" />
+        <Column Name="EntityID" Type="String" />
+        <Column Name="ModelReferenceId" Type="String" />
+        <Column Name="Optional" Type="Integer" />
+        <Column Name="Context" Type="String" />
+        <Column Name="IsLocal" Type="Integer" />
+      </Columns>
+    </Table>
+    <Table SchemaName="dbo" TableName="DMStyle" DELETE="false">
+      <Columns>
+        <Column Name="StyleID" Type="String" IsPK="true" IsAK="true" />
+        <Column Name="DisplayName" Type="String" />
+        <Column Name="ChartCategory" Type="String" />
+        <Column Name="ThumbnailImage" Type="Binary" />
+      </Columns>
+    </Table>
+    <Table SchemaName="dbo" TableName="DMTranslation" DELETE="false">
+      <Columns>
+        <Column Name="LanguageCulture" Type="String" IsPK="true" IsAK="true" />
+        <Column Name="DisplayName" Type="String" IsPK="true" IsAK="true" />
+        <Column Name="TranslationName" Type="String" />
+      </Columns>
+    </Table>
+    <Table SchemaName="dbo" TableName="DMVariable" DELETE="false">
+      <Columns>
+        <Column Name="VariableID" Type="String" IsPK="true" IsAK="true" />
+        <Column Name="PhysicalName" Type="String" />
+        <Column Name="DisplayName" Type="String" />
+        <Column Name="DataType" Type="Integer" />
+        <Column Name="Length" Type="Integer" />
+        <Column Name="Precision" Type="Integer" />
+        <Column Name="Scale" Type="Integer" />
+        <Column Name="Grouping" Type="String" />
+        <Column Name="BehaviorType" Type="String" />
+        <Column Name="Nullable" Type="Integer" />
+        <Column Name="ExcelFormat" Type="String" />
+        <Column Name="Alignment" Type="String" />
+        <Column Name="PresentationStyle" Type="String" />
+        <Column Name="PresentationFormat" Type="String" />
+        <Column Name="ReadOnly" Type="Integer" />
+        <Column Name="Visible" Type="Integer" />
+        <Column Name="Currency" Type="String" />
+        <Column Name="ExpressionText" Type="String" />
+        <Column Name="ComputedFormula" Type="String" />
+        <Column Name="Aggregation" Type="String" />
+        <Column Name="WritebackType" Type="String" />
+        <Column Name="Allocation" Type="String" />
+        <Column Name="IsVirtual" Type="Integer" />
+        <Column Name="ConditionId" Type="String" />
+        <Column Name="ReverseTargetVariable" Type="String" />
+        <Column Name="ReverseExpressionText" Type="String" />
+        <Column Name="ReverseComputedFormula" Type="String" />
+        <Column Name="Mixable" Type="Integer" />
+        <Column Name="TotalsConditionId" Type="String" />
+        <Column Name="FieldListGroup" Type="String" />
+        <Column Name="ValidCombinationType" Type="String" />
+        <Column Name="Positive" Type="Integer" />
+        <Column Name="RangeMin" Type="String" />
+        <Column Name="RangeMax" Type="String" />
+        <Column Name="HorizontalAlignment" Type="String" />
+        <Column Name="VerticalAlignment" Type="String" />
+        <Column Name="WrapText" Type="String" />
+        <Column Name="EditingByDomain" Type="String" />
+        <Column Name="Represents" Type="String" />
+        <Column Name="ReverseTargetDomain" Type="String" />
+        <Column Name="ExternalLinkId" Type="String" />
+      </Columns>
+    </Table>
+    <Table SchemaName="dbo" TableName="DMVariableProtection" DELETE="false">
+      <Columns>
+        <Column Name="VariableID" Type="String" IsPK="true" IsAK="true" />
+        <Column Name="ProtectVariableID" Type="String" IsPK="true" IsAK="true" />
+      </Columns>
+    </Table>
+    <Table SchemaName="dbo" TableName="DMWorkbook" DELETE="false">
+      <Columns>
+        <Column Name="WorkbookID" Type="String" IsPK="true" IsAK="true" />
+        <Column Name="DisplayName" Type="String" />
+        <Column Name="BusinessDescription" Type="String" />
+        <Column Name="ValidCombinationID" Type="String" />
+        <Column Name="ExternalId" Type="String" />
+        <Column Name="Visible" Type="Integer" />
+        <Column Name="Grouping" Type="String" />
+        <Column Name="LinkedWorkbookID" Type="String" />
+        <Column Name="NumberOfRowsByPage" Type="Integer" />
+        <Column Name="Type" Type="String" />
+        <Column Name="AutoFilter" Type="Integer" />
+        <Column Name="AlgorithmConfigurationID" Type="String" />
+      </Columns>
+    </Table>
+    <Table SchemaName="dbo" TableName="DMWorkbookBehavior" DELETE="false">
+      <Columns>
+        <Column Name="WorkbookID" Type="String" IsPK="true" IsAK="true" />
+        <Column Name="TargetApp" Type="String" IsPK="true" IsAK="true" />
+        <Column Name="BehaviorID" Type="String" IsPK="true" IsAK="true" />
+        <Column Name="SequenceNo" Type="Integer" IsPK="true" IsAK="true" />
+        <Column Name="SettingValue" Type="String" />
+      </Columns>
+    </Table>
+    <Table SchemaName="dbo" TableName="DMWorkbookSharedView" DELETE="false">
+      <Columns>
+        <Column Name="WorkbookId" Type="String" IsPK="true" IsAK="true" />
+        <Column Name="SharedFromWorkbookId" Type="String" IsPK="true" IsAK="true" />
+        <Column Name="ViewId" Type="String" IsPK="true" IsAK="true" />
+        <Column Name="SyncGroup" Type="String" />
+        <Column Name="FilterOnSelection" Type="String" />
+        <Column Name="ShowGrandTotals" Type="String" />
+        <Column Name="ShowSubTotals" Type="String" />
+        <Column Name="TotalsPositionRow" Type="String" />
+        <Column Name="TotalsPositionColumn" Type="String" />
+        <Column Name="NumberOfSubTotalsOnRows" Type="Integer" />
+        <Column Name="NumberOfSubTotalsOnColumns" Type="Integer" />
+        <Column Name="TotalsRowForceReadOnly" Type="Integer" />
+        <Column Name="TotalsColumnForceReadOnly" Type="Integer" />
+      </Columns>
+    </Table>
+    <Table SchemaName="dbo" TableName="DMWorkbookView" DELETE="false">
+      <Columns>
+        <Column Name="WorkbookID" Type="String" IsPK="true" IsAK="true" ReferenceTableSchema="dbo" ReferenceTableName="DMWorkbook" ReferenceColumn="WorkbookID" />
+        <Column Name="ViewID" Type="String" IsPK="true" IsAK="true" />
+        <Column Name="AppViewType" Type="String" />
+        <Column Name="AppViewSequence" Type="Integer" />
+        <Column Name="DisplayName" Type="String" />
+        <Column Name="TargetApp" Type="String" />
+        <Column Name="ModelType" Type="String" />
+        <Column Name="RowSourceViewID" Type="String" />
+        <Column Name="ColumnSourceViewID" Type="String" />
+        <Column Name="DataSourceViewID" Type="String" />
+        <Column Name="DataVariablePosition" Type="String" />
+        <Column Name="DirectSQLSource" Type="String" />
+        <Column Name="GroupOddStyleFormat" Type="String" />
+        <Column Name="GroupEvenStyleFormat" Type="String" />
+        <Column Name="Visible" Type="Integer" />
+        <Column Name="SyncGroup" Type="String" />
+        <Column Name="FilterOnSelection" Type="String" />
+        <Column Name="Mode" Type="String" />
+        <Column Name="PipelineVersion" Type="Integer" />
+        <Column Name="ShowGrandTotals" Type="String" />
+        <Column Name="ShowSubTotals" Type="String" />
+        <Column Name="TotalsPositionRow" Type="String" />
+        <Column Name="TotalsPositionColumn" Type="String" />
+        <Column Name="NumberOfSubTotalsOnRows" Type="Integer" />
+        <Column Name="NumberOfSubTotalsOnColumns" Type="Integer" />
+        <Column Name="TotalsRowForceReadOnly" Type="Integer" />
+        <Column Name="TotalsColumnForceReadOnly" Type="Integer" />
+        <Column Name="ValidCombinationModelID" Type="String" />
+        <Column Name="SystemEditabilityEnabled" Type="Integer" />
+        <Column Name="StyleID" Type="String" />
+        <Column Name="ChartTypeID" Type="Integer" />
+        <Column Name="ChartLegendMode" Type="String" />
+        <Column Name="ChartSynchro" Type="String" />
+        <Column Name="ChartPosition" Type="String" />
+        <Column Name="RepeatLabels" Type="Integer" />
+        <Column Name="QuickViewId" Type="String" />
+        <Column Name="SummaryViewId" Type="String" />
+        <Column Name="SummaryViewPosition" Type="String" />
+        <Column Name="TotalsExpandStatus" Type="String" />
+      </Columns>
+    </Table>
+    <Table SchemaName="dbo" TableName="DMWorkbookViewBehavior" DELETE="false">
+      <Columns>
+        <Column Name="WorkbookID" Type="String" IsPK="true" IsAK="true" />
+        <Column Name="ViewID" Type="String" IsPK="true" IsAK="true" />
+        <Column Name="TargetApp" Type="String" IsPK="true" IsAK="true" />
+        <Column Name="BehaviorID" Type="String" IsPK="true" IsAK="true" />
+        <Column Name="SequenceNo" Type="Integer" IsPK="true" IsAK="true" />
+        <Column Name="SettingValue" Type="String" />
+      </Columns>
+    </Table>
+    <Table SchemaName="dbo" TableName="DMWorkbookViewVariable" DELETE="false">
+      <Columns>
+        <Column Name="WorkbookID" Type="String" IsPK="true" IsAK="true" ReferenceTableSchema="dbo" ReferenceTableName="DMWorkbookView" ReferenceColumn="WorkbookID" />
+        <Column Name="ViewID" Type="String" IsPK="true" IsAK="true" ReferenceTableSchema="dbo" ReferenceTableName="DMWorkbookView" ReferenceColumn="ViewID" />
+        <Column Name="SourceViewID" Type="String" IsPK="true" IsAK="true" />
+        <Column Name="SourceViewColumnId" Type="String" IsPK="true" IsAK="true" />
+        <Column Name="DisplayNameOverride" Type="String" />
+        <Column Name="AvailableToUser" Type="Integer" />
+        <Column Name="VisibleByDefault" Type="Integer" />
+        <Column Name="PresentationGroupBy" Type="Integer" />
+        <Column Name="PresentationGroupDefault" Type="Integer" />
+        <Column Name="PresentationColumnGroupBy" Type="Integer" />
+        <Column Name="PresentationColumnGroupDefault" Type="Integer" />
+        <Column Name="PresentationFilterBy" Type="Integer" />
+        <Column Name="PresentationSortBy" Type="Integer" />
+        <Column Name="PresentationSortByDefault" Type="Integer" />
+        <Column Name="PresentationSortDirection" Type="String" />
+        <Column Name="DisplayLength" Type="Integer" />
+        <Column Name="InformationLine" Type="Integer" />
+        <Column Name="GalleryCaptionVariableId" Type="String" />
+        <Column Name="ExcelFormatOverride" Type="String" />
+        <Column Name="PresentationStyleOverride" Type="String" />
+        <Column Name="PresentationFormatOverride" Type="String" />
+        <Column Name="ReadOnlyOverride" Type="Integer" />
+        <Column Name="Searchable" Type="Integer" />
+        <Column Name="SequenceNo" Type="Integer" />
+        <Column Name="ConditionIdOverride" Type="String" />
+        <Column Name="DisableMixable" Type="Integer" />
+        <Column Name="ExposedIntoContextInfoTable" Type="Integer" />
+        <Column Name="FormatGroupChange" Type="Integer" />
+        <Column Name="GroupingOverride" Type="String" />
+        <Column Name="CalculateTotals" Type="Integer" />
+        <Column Name="HyperlinkLayout" Type="String" />
+        <Column Name="TotalsRowForceReadOnly" Type="Integer" />
+        <Column Name="TotalsColumnForceReadOnly" Type="Integer" />
+        <Column Name="TotalsConditionIdOverride" Type="String" />
+        <Column Name="SortOrderSequence" Type="Integer" />
+        <Column Name="SortDirection" Type="String" />
+        <Column Name="AvailableToDashboard" Type="Integer" />
+        <Column Name="CardSecondaryVariableID" Type="String" />
+        <Column Name="ChartTypeIdOverride" Type="Integer" />
+        <Column Name="PivotAssign" Type="String" />
+        <Column Name="Booking" Type="Integer" />
+        <Column Name="Grouping" Type="String" />
+        <Column Name="RepresentOverride" Type="String" />
+      </Columns>
+    </Table>
+    <Table SchemaName="dbo" TableName="DMWorkbookViewVariableProtection" DELETE="false">
+      <Columns>
+        <Column Name="WorkbookID" Type="String" IsPK="true" IsAK="true" />
+        <Column Name="ViewID" Type="String" IsPK="true" IsAK="true" />
+        <Column Name="SourceViewColumnID" Type="String" IsPK="true" IsAK="true" />
+        <Column Name="ProtectSourceViewColumnID" Type="String" IsPK="true" IsAK="true" />
+      </Columns>
+    </Table>
+    <Table SchemaName="dbo" TableName="DMWorkflow" DELETE="false">
+      <Columns>
+        <Column Name="WorkflowID" Type="String" IsPK="true" IsAK="true" />
+        <Column Name="DisplayName" Type="String" />
+        <Column Name="Description" Type="String" />
+        <Column Name="WorkflowSequence" Type="Integer" />
+        <Column Name="ThumbnailImage" Type="Binary" />
+        <Column Name="ColorID" Type="String" />
+        <Column Name="WorkflowUrl" Type="String" />
+      </Columns>
+    </Table>
+    <Table SchemaName="dbo" TableName="DMWorkflowWorkbook" DELETE="false">
+      <Columns>
+        <Column Name="WorkflowID" Type="String" IsPK="true" IsAK="true" />
+        <Column Name="WorkbookID" Type="String" IsPK="true" IsAK="true" ReferenceTableSchema="dbo" ReferenceTableName="DMWorkbook" ReferenceColumn="WorkbookID" />
+        <Column Name="WorkbookSequence" Type="Integer" />
+        <Column Name="Default" Type="Integer" />
+      </Columns>
+    </Table>
+    <Table SchemaName="dbo" TableName="DMWorksheet" DELETE="false">
+      <Columns>
+        <Column Name="WorkbookID" Type="String" IsPK="true" IsAK="true" />
+        <Column Name="WorksheetID" Type="String" IsPK="true" IsAK="true" />
+        <Column Name="DisplayName" Type="String" />
+        <Column Name="BusinessDescription" Type="String" />
+        <Column Name="AppSheetSequence" Type="Integer" />
+        <Column Name="LayoutID" Type="String" />
+        <Column Name="Visible" Type="Integer" />
+      </Columns>
+    </Table>
+    <Table SchemaName="dbo" TableName="DMWorksheetTileView" DELETE="false">
+      <Columns>
+        <Column Name="WorkbookID" Type="String" IsPK="true" IsAK="true" ReferenceTableSchema="dbo" ReferenceTableName="DMWorkbook" ReferenceColumn="WorkbookID" />
+        <Column Name="WorksheetID" Type="String" IsPK="true" IsAK="true" />
+        <Column Name="TileID" Type="Integer" IsPK="true" IsAK="true" />
+        <Column Name="ViewID" Type="String" ReferenceTableSchema="dbo" ReferenceTableName="DMWorkbookView" ReferenceColumn="ViewID" />
+        <Column Name="SubTypeID" Type="String" />
+        <Column Name="RowStart" Type="Integer" />
+        <Column Name="RowEnd" Type="Integer" />
+        <Column Name="ColumnStart" Type="Integer" />
+        <Column Name="ColumnEnd" Type="Integer" />
+      </Columns>
+    </Table>
+    <Table SchemaName="dbo" TableName="PRWorkbookSetting" DELETE="false">
+      <Columns>
+        <Column Name="WorkbookID" Type="String" IsPK="true" IsAK="true" />
+        <Column Name="FilterEngineCommitTimeout" Type="Integer" />
+        <Column Name="FilterEngineCompatibilityLevel" Type="Integer" />
+        <Column Name="FilterEngineNoLock" Type="Integer" />
+        <Column Name="FilterEngineTempOutputLevel" Type="Integer" />
+        <Column Name="FilterEngineBaseOutputQueryHints" Type="String" />
+        <Column Name="ComputationLoadingQueryIndipendentFoEnabled" Type="Integer" />
+        <Column Name="ModifiedDate" Type="DateTime" />
+        <Column Name="PivotMaxNumberOfCells" Type="Integer" />
+        <Column Name="FilterEngineSizeEstimationGrouping" Type="String" />
+        <Column Name="FilterEngineSizeEstimationMaxNumberOfRows" Type="Integer" />
+        <Column Name="FilterEnginePreserveLocalFilter" Type="Integer" />
+        <Column Name="FilterEngineMaxSelectableMembersInFilterProjection" Type="Integer" />
+        <Column Name="FilterEngineUpdateFilterOutputStatistics" Type="Integer" />
+        <Column Name="FilterEngineMaxNumberOfMembersClient" Type="Integer" />
+        <Column Name="FilterEngineOnMemberSelectionCompatibilityLevel" Type="Integer" />
+        <Column Name="CanUseNewWritebackCommitKeys" Type="Integer" />
+      </Columns>
+    </Table>
+    <Table SchemaName="dbo" TableName="RPEditRule" DELETE="false">
+      <Columns>
+        <Column Name="SourceViewID" Type="String" IsPK="true" IsAK="true" />
+        <Column Name="SourceViewColumnID" Type="String" IsPK="true" IsAK="true" />
+        <Column Name="EditableWhenTrue" Type="String" />
+        <Column Name="FreeTextAllowed" Type="Integer" />
+        <Column Name="RangeMin" Type="String" />
+        <Column Name="RangeMax" Type="String" />
+        <Column Name="RangeErrorMessage" Type="String" />
+        <Column Name="UniqueInsideColumn" Type="String" />
+        <Column Name="HideTaskPaneEditor" Type="Integer" />
+        <Column Name="Mandatory" Type="Integer" />
+        <Column Name="RefreshRequiredAfterWrite" Type="Integer" />
+        <Column Name="RefreshEditabilityAfterWrite" Type="Integer" />
+        <Column Name="RefreshPictureGalleryAfterWrite" Type="Integer" />
+        <Column Name="StdWbkModelID" Type="String" />
+        <Column Name="StdWbkVariableID" Type="String" />
+        <Column Name="DisableClientSideValidationAfterEdit" Type="Integer" />
+      </Columns>
+    </Table>
+    <Table SchemaName="dbo" TableName="RPEditRuleFilter" DELETE="false">
+      <Columns>
+        <Column Name="SourceViewID" Type="String" IsPK="true" IsAK="true" ReferenceTableSchema="dbo" ReferenceTableName="RPEditRule" ReferenceColumn="SourceViewID" />
+        <Column Name="SourceViewColumnID" Type="String" IsPK="true" IsAK="true" ReferenceTableSchema="dbo" ReferenceTableName="RPEditRule" ReferenceColumn="SourceViewColumnID" />
+        <Column Name="SequenceNo" Type="Integer" IsPK="true" IsAK="true" />
+        <Column Name="AndOr" Type="String" />
+        <Column Name="BracketsStart" Type="String" />
+        <Column Name="ColumnName" Type="String" />
+        <Column Name="Operator" Type="String" ReferenceTableSchema="dbo" ReferenceTableName="RPEditRuleOperator" ReferenceColumn="Operator" />
+        <Column Name="Value" Type="String" />
+        <Column Name="Format" Type="String" />
+        <Column Name="FixedValue" Type="Integer" />
+        <Column Name="BracketsEnd" Type="String" />
+      </Columns>
+    </Table>
+    <Table SchemaName="dbo" TableName="RPEditRuleOperator" DELETE="false">
+      <Columns>
+        <Column Name="Operator" Type="String" IsPK="true" IsAK="true" />
+      </Columns>
+    </Table>
+    <Table SchemaName="dbo" TableName="RPEditRuleRestriction" DELETE="false">
+      <Columns>
+        <Column Name="SourceViewID" Type="String" IsPK="true" IsAK="true" ReferenceTableSchema="dbo" ReferenceTableName="RPEditRule" ReferenceColumn="SourceViewID" />
+        <Column Name="SourceViewColumnID" Type="String" IsPK="true" IsAK="true" ReferenceTableSchema="dbo" ReferenceTableName="RPEditRule" ReferenceColumn="SourceViewColumnID" />
+        <Column Name="SequenceNo" Type="Integer" IsPK="true" IsAK="true" />
+        <Column Name="WorkbookID" Type="String" />
+        <Column Name="Restriction" Type="String" />
+      </Columns>
+    </Table>
+    <Table SchemaName="dbo" TableName="RPEditRuleSource" DELETE="false">
+      <Columns>
+        <Column Name="SourceViewID" Type="String" IsPK="true" IsAK="true" ReferenceTableSchema="dbo" ReferenceTableName="RPEditRule" ReferenceColumn="SourceViewID" />
+        <Column Name="SourceViewColumnID" Type="String" IsPK="true" IsAK="true" ReferenceTableSchema="dbo" ReferenceTableName="RPEditRule" ReferenceColumn="SourceViewColumnID" />
+        <Column Name="SequenceNo" Type="Integer" IsPK="true" IsAK="true" />
+        <Column Name="SourceName" Type="String" />
+        <Column Name="DefaultSource" Type="Integer" />
+        <Column Name="FromArca" Type="Integer" />
+        <Column Name="FromDwh" Type="Integer" />
+        <Column Name="FromSystem" Type="Integer" />
+        <Column Name="ServerName" Type="String" />
+        <Column Name="DatabaseName" Type="String" />
+        <Column Name="TableName" Type="String" />
+        <Column Name="KeyColumnName" Type="String" />
+        <Column Name="NameColumnName" Type="String" />
+        <Column Name="LabelColumnName" Type="String" />
+        <Column Name="OrderBy" Type="String" />
+        <Column Name="Optimization" Type="String" />
+        <Column Name="StoredProcedure" Type="Integer" />
+        <Column Name="InvariantForAll" Type="Integer" />
+        <Column Name="AllowNewMember" Type="Integer" />
+        <Column Name="AllowMultiple" Type="Integer" />
+        <Column Name="DisableClientSideValidationAfterEdit" Type="Integer" />
+      </Columns>
+    </Table>
+    <Table SchemaName="dbo" TableName="SYAppSetting" DELETE="false">
+      <Columns>
+        <Column Name="TargetApp" Type="String" IsPK="true" IsAK="true" />
+        <Column Name="SettingKey" Type="String" IsPK="true" IsAK="true" />
+        <Column Name="SettingValue" Type="String" />
+      </Columns>
+    </Table>
+    <Table SchemaName="dbo" TableName="SYFolder" DELETE="false">
+      <Columns>
+        <Column Name="Type" Type="String" IsPK="true" IsAK="true" />
+        <Column Name="FolderID" Type="String" IsPK="true" IsAK="true" />
+        <Column Name="Name" Type="String" />
+        <Column Name="ParentFolderID" Type="String" />
+      </Columns>
+    </Table>
+    <Table SchemaName="dbo" TableName="SYParameter" DELETE="false">
+      <Columns>
+        <Column Name="Name" Type="String" IsPK="true" IsAK="true" />
+        <Column Name="Value" Type="String" />
+      </Columns>
+    </Table>
+    <Table SchemaName="dbo" TableName="UMGroupDataVisibility" DELETE="false">
+      <Columns>
+        <Column Name="GroupId" Type="String" IsPK="true" IsAK="true" ReferenceTableSchema="dbo" ReferenceTableName="UMGroupVisibility" ReferenceColumn="GroupId" />
+        <Column Name="EntityModelId" Type="String" IsPK="true" IsAK="true" ReferenceTableSchema="dbo" ReferenceTableName="DMModelTable" ReferenceColumn="ModelID" />
+        <Column Name="EntityExternalId" Type="String" IsPK="true" IsAK="true" />
+      </Columns>
+    </Table>
+    <Table SchemaName="dbo" TableName="UMGroupVisibility" DELETE="false">
+      <Columns>
+        <Column Name="GroupId" Type="String" IsPK="true" IsAK="true" />
+        <Column Name="GroupName" Type="String" />
+        <Column Name="ADUserGroup" Type="String" />
+        <Column Name="ExternalGroupID" Type="String" />
+      </Columns>
+    </Table>
+    <Table SchemaName="dbo" TableName="UMUserFavorite" DELETE="true">
+      <Columns>
+        <Column Name="DomainUserKey" Type="Integer" IsPK="true" IsAK="true" />
+        <Column Name="WorkflowID" Type="String" IsPK="true" IsAK="true" ReferenceTableSchema="dbo" ReferenceTableName="DMWorkflow" ReferenceColumn="WorkflowID" />
+        <Column Name="WorkbookID" Type="String" IsPK="true" IsAK="true" ReferenceTableSchema="dbo" ReferenceTableName="DMWorkbook" ReferenceColumn="WorkbookID" />
+        <Column Name="CreateTime" Type="String" />
+        <Column Name="ThumbnailImage" Type="String" />
+      </Columns>
+    </Table>
+    <Table SchemaName="dbo" TableName="UMUserRecent" DELETE="true">
+      <Columns>
+        <Column Name="DomainUserKey" Type="Integer" IsPK="true" IsAK="true" />
+        <Column Name="WorkflowID" Type="String" IsPK="true" IsAK="true" ReferenceTableSchema="dbo" ReferenceTableName="DMWorkflow" ReferenceColumn="WorkflowID" />
+        <Column Name="WorkbookID" Type="String" IsPK="true" IsAK="true" ReferenceTableSchema="dbo" ReferenceTableName="DMWorkbook" ReferenceColumn="WorkbookID" />
+        <Column Name="LastAccessTime" Type="String" />
+        <Column Name="ThumbnailImage" Type="String" />
+      </Columns>
+    </Table>
+    <Table SchemaName="dbo" TableName="WBRoundMode" DELETE="false">
+      <Columns>
+        <Column Name="RoundMode" Type="String" IsPK="true" IsAK="true" />
+      </Columns>
+    </Table>
+    <Table SchemaName="dbo" TableName="WBSource" DELETE="false">
+      <Columns>
+        <Column Name="SourceViewColumnID" Type="String" IsPK="true" IsAK="true" />
+        <Column Name="SourceView" Type="String" />
+        <Column Name="SourceExpression" Type="String" />
+        <Column Name="UseMerge" Type="Integer" />
+      </Columns>
+    </Table>
+    <Table SchemaName="dbo" TableName="WBTarget" DELETE="false">
+      <Columns>
+        <Column Name="SourceViewColumnID" Type="String" IsPK="true" IsAK="true" />
+        <Column Name="StepSequence" Type="Integer" IsPK="true" IsAK="true" />
+        <Column Name="VariableID" Type="String" />
+        <Column Name="ModelID" Type="String" />
+        <Column Name="TargetView" Type="String" />
+        <Column Name="TargetExpression" Type="String" />
+        <Column Name="NewMemberManagerSP" Type="String" />
+        <Column Name="ManagerSP" Type="String" />
+        <Column Name="SingleRunManagerSP" Type="String" />
+        <Column Name="PostWritebackSP" Type="String" />
+        <Column Name="Editability" Type="String" />
+        <Column Name="RoundMode" Type="String" />
+      </Columns>
+    </Table>
+    <Table SchemaName="dbo" TableName="WBTxtTableSelector" DELETE="false">
+      <Columns>
+        <Column Name="ViewID" Type="String" IsPK="true" IsAK="true" />
+        <Column Name="SourceViewID" Type="String" IsPK="true" IsAK="true" />
+        <Column Name="SourceViewColumnID" Type="String" IsPK="true" IsAK="true" />
+        <Column Name="ModelObjectID" Type="String" />
+        <Column Name="PropertyID" Type="String" />
+      </Columns>
+    </Table>
+  </Tables>
+</Model>
