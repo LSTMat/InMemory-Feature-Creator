@@ -1,0 +1,7 @@
+{
+    "liveshare.languages.allowGuestCommandControl": true,
+    "terminal.integrated.accessibleViewFocusOnCommandExecution": true,
+    "liveshare.allowGuestDebugControl": true,
+    "liveshare.allowGuestTaskControl": true,
+    "liveshare.notebooks.allowGuestExecuteCells": true
+}

@@ -186,7 +186,7 @@ class CSV_XML_Editor(QMainWindow):
         print("Creating menu...")  # Debug log
         menubar = self.menuBar()
         file_menu = menubar.addMenu("File")
-        load_xml_action = QAction("Load XML", self)
+        load_xml_action = QAction("Load System Configuration", self)
         load_xml_action.triggered.connect(self.show_load_xml_dialog)
         file_menu.addAction(load_xml_action)
     
@@ -252,6 +252,13 @@ class CSV_XML_Editor(QMainWindow):
 
     def create_dropdown(self, options: collections.abc.Iterable[typing.Optional[str]], addNone: bool = False, currentValue: str = "None"):
         dropdown = QComboBox()
+        dropdown.setEditable(True)
+        #dropdown.lineEdit().textChanged.connect(lambda text, dd=dropdown, opts=options: self.filter_dropdown(dd, opts, text))
+        dropdown.setStyleSheet(
+            "QComboBox QAbstractItemView {"
+            "selection-background-color: #0078D7;"
+            "}" 
+        )
         if addNone:
             dropdown.addItem("None")
 
@@ -262,6 +269,14 @@ class CSV_XML_Editor(QMainWindow):
             dropdown.setCurrentText(currentValue)
         return dropdown
     
+    def filter_dropdown(self, dropdown: QComboBox, options: collections.abc.Iterable[typing.Optional[str]], text: str):
+        """Filters dropdown values based on user input."""
+        dropdown.blockSignals(True)
+        dropdown.clear()
+        filtered_options = [option for option in options if text.lower() in option.lower()] if text else options
+        dropdown.addItems(filtered_options if filtered_options else options)
+        dropdown.blockSignals(False)
+
     def get_button_style(self):
         """Returns the appropriate button style based on system theme."""
         if self.is_dark_mode:

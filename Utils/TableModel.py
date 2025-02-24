@@ -60,6 +60,17 @@ class Table:
         object.__setattr__(self, "_table_name", table_name)
         object.__setattr__(self, "_rows", rows if rows is not None else {})
 
+    def __post_init__(self):
+        # Create an index for quick lookups by column values
+        object.__setattr__(self, "_index", {})
+        for row in self._rows.values():
+            for column_name, column in row.get_columns().items():
+                if column_name not in self._index:
+                    self._index[column_name] = {}
+                if column.get_value() not in self._index[column_name]:
+                    self._index[column_name][column.get_value()] = []
+                self._index[column_name][column.get_value()].append(row)
+
     def get_schema_name(self) -> str:
         return self._schema_name
     
@@ -71,3 +82,6 @@ class Table:
 
     def get_column_values(self, column_name: str) -> list[str]:
         return [row.get_column_value(column_name) for row in self._rows.values() if row.get_column_value(column_name) is not None]
+
+    def filter_rows_by_condition(self, where_column_name: str, condition_value: str) -> list[Row]:
+        return self._index.get(where_column_name, {}).get(condition_value, [])
