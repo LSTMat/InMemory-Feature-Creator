@@ -3,7 +3,6 @@ import collections, re, typing, enum
 import os
 import Utils
 import pandas as pd
-from Utils import (IMFGCore)
 import xml.etree.ElementTree as ET
 from PyQt6.QtWidgets import (QApplication, QMainWindow, QWidget, QVBoxLayout, QMenuBar, 
                              QFileDialog, QTableWidget, QTableWidgetItem, QTabWidget, QCheckBox, QComboBox, 
@@ -127,7 +126,7 @@ class CSV_XML_Editor(QMainWindow):
         self.style_table(self.table1)
         self.table1.setColumnCount(5)
         self.table1.setRowCount(10)
-        self.table1.setHorizontalHeaderLabels([IMFGCore.Table1ColumnName.COLUMN_TABLE_NAME.value, IMFGCore.Table1ColumnName.COLUMN_IS_ENTITY.value, IMFGCore.Table1ColumnName.COLUMN_IS_DOMAIN.value, IMFGCore.Table1ColumnName.COLUMN_IS_VIEW.value, IMFGCore.Table1ColumnName.COLUMN_IS_ALIAS_SPECIFIC.value])
+        self.table1.setHorizontalHeaderLabels([Utils.Table1ColumnName.COLUMN_TABLE_NAME.value, Utils.Table1ColumnName.COLUMN_IS_ENTITY.value, Utils.Table1ColumnName.COLUMN_IS_DOMAIN.value, Utils.Table1ColumnName.COLUMN_IS_VIEW.value, Utils.Table1ColumnName.COLUMN_IS_ALIAS_SPECIFIC.value])
         self.initialize_table1()
         self.tabs.addTab(self.table1, "Tabelle")
         
@@ -137,7 +136,7 @@ class CSV_XML_Editor(QMainWindow):
         self.style_table(self.table2)
         self.table2.setColumnCount(5)
         self.table2.setRowCount(10)
-        self.table2.setHorizontalHeaderLabels([IMFGCore.Table2ColumnName.COLUMN_VARIABLE_NAME.value, IMFGCore.Table2ColumnName.COLUMN_PK.value, IMFGCore.Table2ColumnName.COLUMN_TABLE_NAME.value, IMFGCore.Table2ColumnName.COLUMN_ALLOCATION.value, IMFGCore.Table2ColumnName.COLUMN_DOMAIN.value])
+        self.table2.setHorizontalHeaderLabels([Utils.Table2ColumnName.COLUMN_VARIABLE_NAME.value, Utils.Table2ColumnName.COLUMN_PK.value, Utils.Table2ColumnName.COLUMN_TABLE_NAME.value, Utils.Table2ColumnName.COLUMN_ALLOCATION.value, Utils.Table2ColumnName.COLUMN_DOMAIN.value])
         self.initialize_table2()
         self.table2.cellChanged.connect(self.on_table2_cell_changed)
         self.tabs.addTab(self.table2, "Calculation Plan")
@@ -203,7 +202,6 @@ class CSV_XML_Editor(QMainWindow):
         dialog = LoadXMLDialog(self)
         if dialog.exec():
             print("XML Configuration Loaded")
-            #self.refresh_dropdowns()
     
     def generate_feature(self):
         """Saves the SQL content to a file, prompting the user for a save location."""
@@ -252,16 +250,16 @@ class CSV_XML_Editor(QMainWindow):
         if self.dm_inmemory_data is None:
             return
         
-        domain_values = self.dm_inmemory_data.get_column_values_filtered(table_name=IMFGCore.IMConfigurationTable.DOMAIN.value, column_name=IMFGCore.IMConfigurationTableDomain.NAME.value, FilterColumn = EntityID, FilterValue = FilterValue)
+        domain_values = self.dm_inmemory_data.get_column_values_filtered(table_name=Utils.IMConfigurationTable.DOMAIN.value, column_name=Utils.IMConfigurationTableDomain.NAME.value, FilterColumn = EntityID, FilterValue = FilterValue)
         dropdown: QComboBox
 
         for row in range(self.table2.rowCount()):
-            dropdown = self.table2.cellWidget(row, IMFGCore.Table2ColumnOrder.COLUMN_DOMAIN.value - 1)
+            dropdown = self.table2.cellWidget(row, Utils.Table2ColumnOrder.COLUMN_DOMAIN.value - 1)
             currentValue = dropdown.currentText()
             if FilterValue is not "" or FilterValue is None:
-                self.table2.setCellWidget(row, IMFGCore.Table2ColumnOrder.COLUMN_DOMAIN.value - 1, self.create_dropdown(domain_values, addNone=True, currentValue=currentValue))
+                self.table2.setCellWidget(row, Utils.Table2ColumnOrder.COLUMN_DOMAIN.value - 1, self.create_dropdown(domain_values, addNone=True, currentValue=currentValue))
             else:
-                self.table2.setCellWidget(row, IMFGCore.Table2ColumnOrder.COLUMN_DOMAIN.value - 1, self.create_dropdown(domain_values, addNone=True))
+                self.table2.setCellWidget(row, Utils.Table2ColumnOrder.COLUMN_DOMAIN.value - 1, self.create_dropdown(domain_values, addNone=True))
 
     def create_dropdown(self, options: collections.abc.Iterable[typing.Optional[str]], addNone: bool = False, currentValue: str = ""):
         dropdown = QComboBox()
@@ -287,11 +285,11 @@ class CSV_XML_Editor(QMainWindow):
 
         column_label = self.table2.horizontalHeaderItem(column).text()
 
-        if column_label == IMFGCore.Table2ColumnName.COLUMN_TABLE_NAME.value:
+        if column_label == Utils.Table2ColumnName.COLUMN_TABLE_NAME.value:
             item = self.table2.item(row, column)
             filter_value = item.text()
             #print(f"Filter value: {filter_value}")  # Debug log
-            self.refresh_dropdowns(EntityID=IMFGCore.IMConfigurationTableDomain.ENTITYID.value, FilterValue=filter_value)
+            self.refresh_dropdowns(EntityID=Utils.IMConfigurationTableDomain.ENTITYID.value, FilterValue=filter_value)
         
 
     def get_button_style(self):

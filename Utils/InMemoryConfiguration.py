@@ -68,9 +68,6 @@ def load_xml_to_config(file_path: str, metadata_file: str) -> ModelConfiguration
                                             reference_table_name=metadata["ReferenceTableName"],
                                             reference_column=metadata["ReferenceColumn"])
 
-        row_number = max(tables[table_key].get_rows().keys(), default=-1) + 1
-        row = Row(row_number=row_number, columns=columns)  # Create a new row with column data
-        new_rows = {**tables[table_key].get_rows(), row_number: row}
-        object.__setattr__(tables[table_key], "_rows", new_rows)  # Add the row to the respective table 
+        tables[table_key].add_row(columns)
     
     return ModelConfiguration(Name=config_name, Tables=list(tables.values()))
