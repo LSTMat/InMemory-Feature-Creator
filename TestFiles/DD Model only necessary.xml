@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="utf-16"?>
+<Model xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <Name>DD Model</Name>
+  <Tables>
+    <Table SchemaName="dbo" TableName="DDCalculationPlan" DELETE="false">
+      <Columns>
+        <Column Name="FeatureKey" Type="Integer" IsPK="true" IsAK="true" ReferenceTableSchema="dbo" ReferenceTableName="DDFeature" ReferenceColumn="FeatureKey" />
+        <Column Name="CalculationPlanID" Type="String" IsPK="true" IsAK="true" />
+        <Column Name="DisplayName" Type="String" />
+        <Column Name="BusinessDescription" Type="String" />
+        <Column Name="Grouping" Type="String" />
+        <Column Name="CRUDStatus" Type="String" />
+        <Column Name="TranslationsDataEntry" Type="Integer" />
+        <Column Name="CompileAtDeploy" Type="Integer" />
+        <Column Name="BusinessSolverAssociated" Type="String" />
+        <Column Name="UseTemplateGroup" Type="Integer" />
+      </Columns>
+    </Table>
+    <Table SchemaName="dbo" TableName="DDCalculationPlanColumnParameter" DELETE="false">
+      <Columns>
+        <Column Name="FeatureKey" Type="Integer" IsPK="true" IsAK="true" ReferenceTableSchema="dbo" ReferenceTableName="DDFeature" ReferenceColumn="FeatureKey" />
+        <Column Name="LevelID" Type="String" IsPK="true" IsAK="true" />
+        <Column Name="UniqueColumnId" Type="String" IsPK="true" IsAK="true" />
+        <Column Name="OperatorID" Type="String" IsPK="true" IsAK="true" />
+        <Column Name="ParameterID" Type="String" IsPK="true" IsAK="true" />
+        <Column Name="ParameterValue" Type="String" />
+        <Column Name="ParamValid" Type="Integer" />
+      </Columns>
+    </Table>
+    <Table SchemaName="dbo" TableName="DDCalculationPlanLevel" DELETE="false">
+      <Columns>
+        <Column Name="FeatureKey" Type="Integer" IsPK="true" IsAK="true" ReferenceTableSchema="dbo" ReferenceTableName="DDCalculationPlan" ReferenceColumn="FeatureKey" />
+        <Column Name="LevelID" Type="String" IsPK="true" IsAK="true" />
+        <Column Name="CalculationPlanID" Type="String" ReferenceTableSchema="dbo" ReferenceTableName="DDCalculationPlan" ReferenceColumn="CalculationPlanID" />
+        <Column Name="DisplayName" Type="String" />
+        <Column Name="DriverModelID" Type="String" />
+        <Column Name="UsageType" Type="String" />
+        <Column Name="GraphX" Type="Integer" />
+        <Column Name="GraphY" Type="Integer" />
+        <Column Name="HasKeys" Type="Integer" />
+        <Column Name="SQLOverride" Type="String" />
+      </Columns>
+    </Table>
+    <Table SchemaName="dbo" TableName="DDCalculationPlanLevelColumn" DELETE="false">
+      <Columns>
+        <Column Name="FeatureKey" Type="Integer" IsPK="true" IsAK="true" ReferenceTableSchema="dbo" ReferenceTableName="DDCalculationPlanLevel" ReferenceColumn="FeatureKey" />
+        <Column Name="LevelID" Type="String" IsPK="true" IsAK="true" ReferenceTableSchema="dbo" ReferenceTableName="DDCalculationPlanLevel" ReferenceColumn="LevelID" />
+        <Column Name="UniqueColumnId" Type="String" IsPK="true" IsAK="true" />
+        <Column Name="AggregateOperatorId" Type="String" />
+        <Column Name="WriteOperatorId" Type="String" />
+        <Column Name="KeySequenceNo" Type="Integer" />
+        <Column Name="SourceViewColumnId" Type="String" />
+        <Column Name="VariableSequenceNo" Type="Integer" />
+        <Column Name="WriteOverride" Type="Integer" />
+        <Column Name="AggregateOverride" Type="Integer" />
+        <Column Name="JoinOperatorID" Type="String" />
+        <Column Name="SourceCalculationLevelId" Type="String" />
+        <Column Name="FilterOutputKeySequence" Type="Integer" />
+        <Column Name="TotalsAggregateOperatorId" Type="String" />
+        <Column Name="TotalsWriteOperatorId" Type="String" />
+        <Column Name="DomainID" Type="String" />
+        <Column Name="CRUDStatus" Type="String" />
+        <Column Name="FilterOutputKeyGroup" Type="String" />
+      </Columns>
+    </Table>
+    <Table SchemaName="dbo" TableName="DDCalculationPlanLevelDataConstraint" DELETE="false">
+      <Columns>
+        <Column Name="FeatureKey" Type="Integer" IsPK="true" IsAK="true" ReferenceTableSchema="dbo" ReferenceTableName="DDFeature" ReferenceColumn="FeatureKey" />
+        <Column Name="LevelID" Type="String" IsPK="true" IsAK="true" />
+        <Column Name="ConditionID" Type="String" IsPK="true" IsAK="true" />
+        <Column Name="SequenceNo" Type="Integer" />
+        <Column Name="Bracket" Type="String" />
+        <Column Name="BoolOperator" Type="String" />
+        <Column Name="VariableUniqueColumnId" Type="String" />
+        <Column Name="ConditionOperator" Type="String" />
+        <Column Name="ComparedToUniqueColumnId" Type="String" />
+        <Column Name="ComparedToConstant" Type="String" />
+      </Columns>
+    </Table>
+    <Table SchemaName="dbo" TableName="DDCalculationPlanLink" DELETE="false">
+      <Columns>
+        <Column Name="FeatureKey" Type="Integer" IsPK="true" IsAK="true" ReferenceTableSchema="dbo" ReferenceTableName="DDCalculationPlan" ReferenceColumn="FeatureKey" />
+        <Column Name="FromLevelID" Type="String" IsPK="true" IsAK="true" />
+        <Column Name="ToLevelID" Type="String" IsPK="true" IsAK="true" />
+        <Column Name="CalculationPlanID" Type="String" ReferenceTableSchema="dbo" ReferenceTableName="DDCalculationPlan" ReferenceColumn="CalculationPlanID" />
+        <Column Name="LinkType" Type="String" />
+      </Columns>
+    </Table>
+    <Table SchemaName="dbo" TableName="DDDomain" DELETE="false">
+      <Columns>
+        <Column Name="FeatureKey" Type="Integer" IsPK="true" IsAK="true" ReferenceTableSchema="dbo" ReferenceTableName="DDFeature" ReferenceColumn="FeatureKey" />
+        <Column Name="DomainKey" Type="Integer" IsPK="true" IsAK="true" />
+        <Column Name="DomainID" Type="String" />
+        <Column Name="Name" Type="String" />
+        <Column Name="Description" Type="String" />
+        <Column Name="PresentationType" Type="String" />
+        <Column Name="WebPresentationType" Type="String" />
+        <Column Name="Type" Type="String" />
+        <Column Name="UseFilters" Type="Integer" />
+        <Column Name="EntityID" Type="String" />
+        <Column Name="CRUDStatus" Type="String" />
+        <Column Name="LookupOperatorID" Type="String" />
+        <Column Name="FilterOutputUniqueColumnIds" Type="String" />
+        <Column Name="PresentOnlyOnce" Type="Integer" />
+        <Column Name="ReducedBy" Type="String" />
+        <Column Name="UseAsDynamicDomain" Type="Integer" />
+      </Columns>
+    </Table>
+    <Table SchemaName="dbo" TableName="DDDomainDetail" DELETE="false">
+      <Columns>
+        <Column Name="FeatureKey" Type="Integer" IsPK="true" IsAK="true" ReferenceTableSchema="dbo" ReferenceTableName="DDDomain" ReferenceColumn="FeatureKey" />
+        <Column Name="DomainKey" Type="Integer" IsPK="true" IsAK="true" ReferenceTableSchema="dbo" ReferenceTableName="DDDomain" ReferenceColumn="DomainKey" />
+        <Column Name="SequenceNo" Type="Integer" IsPK="true" />
+        <Column Name="DomainID" Type="String" />
+        <Column Name="PropertyID" Type="String" />
+        <Column Name="UniqueColumnId" Type="String" />
+        <Column Name="Usage" Type="String" />
+        <Column Name="CRUDStatus" Type="String" />
+        <Column Name="LookupParameterID" Type="String" />
+      </Columns>
+    </Table>
+    <Table SchemaName="dbo" TableName="DDFeature" DELETE="false">
+      <Columns>
+        <Column Name="FeatureKey" Type="Integer" IsIdentity="true" IsPK="true" IsAK="true" />
+        <Column Name="FeatureID" Type="String" />
+        <Column Name="FeatureName" Type="String" />
+        <Column Name="BusinessDescription" Type="String" />
+        <Column Name="FeatureStatus" Type="Integer" />
+        <Column Name="CurrentAliasID" Type="String" />
+        <Column Name="IncludeSYParam" Type="Integer" />
+        <Column Name="DeployAllModel" Type="Integer" />
+        <Column Name="SyncCustomOnDeploy" Type="Integer" />
+        <Column Name="PreScript" Type="String" />
+        <Column Name="PostScript" Type="String" />
+        <Column Name="PurgeDeletedObjects" Type="Integer" />
+        <Column Name="IncludeConditionalFormatting" Type="Integer" />
+        <Column Name="IncludeAlias" Type="Integer" />
+        <Column Name="IncludeApplicationLayoutTables" Type="Integer" />
+        <Column Name="IncludeWritebackTables" Type="Integer" />
+        <Column Name="IncludeInfoPointTables" Type="Integer" />
+      </Columns>
+    </Table>
+    <Table SchemaName="dbo" TableName="DDModelTable" DELETE="false">
+      <Columns>
+        <Column Name="FeatureKey" Type="Integer" IsPK="true" IsAK="true" ReferenceTableSchema="dbo" ReferenceTableName="DDFeature" ReferenceColumn="FeatureKey" />
+        <Column Name="ModelTableKey" Type="Integer" IsIdentity="true" IsPK="true" IsAK="true" />
+        <Column Name="ModelID" Type="String" />
+        <Column Name="DisplayName" Type="String" />
+        <Column Name="PhysicalName" Type="String" />
+        <Column Name="Partitioned" Type="Integer" />
+        <Column Name="Managed" Type="Integer" />
+        <Column Name="ModelType" Type="String" />
+        <Column Name="ColumnStore" Type="Integer" />
+        <Column Name="Grouping" Type="String" />
+        <Column Name="AliasSpecific" Type="Integer" />
+        <Column Name="SystemStatus" Type="Integer" />
+        <Column Name="CRUDStatus" Type="String" />
+      </Columns>
+    </Table>
+    <Table SchemaName="dbo" TableName="DDModelTableColumn" DELETE="false">
+      <Columns>
+        <Column Name="FeatureKey" Type="Integer" IsPK="true" IsAK="true" ReferenceTableSchema="dbo" ReferenceTableName="DDModelTable" ReferenceColumn="FeatureKey" />
+        <Column Name="ModelTableKey" Type="Integer" IsPK="true" IsAK="true" ReferenceTableSchema="dbo" ReferenceTableName="DDModelTable" ReferenceColumn="ModelTableKey" />
+        <Column Name="ModelTableColumnKey" Type="Integer" IsIdentity="true" IsPK="true" IsAK="true" />
+        <Column Name="FieldName" Type="String" />
+        <Column Name="DisplayNameOverride" Type="String" />
+        <Column Name="FieldType" Type="String" />
+        <Column Name="ReferenceModelID" Type="String" />
+        <Column Name="ReferenceLinkID" Type="String" />
+        <Column Name="SequenceNo" Type="Integer" />
+        <Column Name="IncludeInRunScope" Type="Integer" />
+        <Column Name="DefaultValue" Type="String" />
+        <Column Name="OldFieldName" Type="String" />
+        <Column Name="UniqueColumnId" Type="String" />
+        <Column Name="DefaultReference" Type="String" />
+        <Column Name="OverrideReference" Type="String" />
+        <Column Name="ValueSortColumn" Type="String" />
+        <Column Name="ValueSortDirection" Type="String" />
+        <Column Name="Cardinality" Type="String" />
+        <Column Name="Translated" Type="Integer" />
+        <Column Name="CRUDStatus" Type="String" />
+        <Column Name="AttributesGroupName" Type="String" />
+        <Column Name="AutoFilter" Type="Integer" />
+        <Column Name="AutoFilterSequence" Type="Integer" />
+        <Column Name="Upload" Type="Integer" />
+        <Column Name="NamedFilter" Type="Integer" />
+      </Columns>
+    </Table>
+    <Table SchemaName="dbo" TableName="DDVariable" DELETE="false">
+      <Columns>
+        <Column Name="FeatureKey" Type="Integer" IsPK="true" IsAK="true" ReferenceTableSchema="dbo" ReferenceTableName="DDFeature" ReferenceColumn="FeatureKey" />
+        <Column Name="VariableKey" Type="Integer" IsIdentity="true" IsPK="true" IsAK="true" />
+        <Column Name="VariableID" Type="String" />
+        <Column Name="PhysicalName" Type="String" />
+        <Column Name="DisplayName" Type="String" />
+        <Column Name="DataType" Type="Integer" />
+        <Column Name="Length" Type="Integer" />
+        <Column Name="Precision" Type="Integer" />
+        <Column Name="Scale" Type="Integer" />
+        <Column Name="Grouping" Type="String" />
+        <Column Name="BehaviorType" Type="String" />
+        <Column Name="Nullable" Type="Integer" />
+        <Column Name="ExcelFormat" Type="String" />
+        <Column Name="Alignment" Type="String" />
+        <Column Name="PresentationStyle" Type="String" />
+        <Column Name="PresentationFormat" Type="String" />
+        <Column Name="ReadOnly" Type="Integer" />
+        <Column Name="Visible" Type="Integer" />
+        <Column Name="Currency" Type="String" />
+        <Column Name="Formula" Type="Integer" />
+        <Column Name="ExpressionText" Type="String" />
+        <Column Name="ComputedFormula" Type="String" />
+        <Column Name="Aggregation" Type="String" />
+        <Column Name="WritebackType" Type="String" />
+        <Column Name="Allocation" Type="String" />
+        <Column Name="IsVirtual" Type="Integer" />
+        <Column Name="ConditionId" Type="String" />
+        <Column Name="ReverseTargetVariable" Type="String" />
+        <Column Name="ReverseExpressionText" Type="String" />
+        <Column Name="ReverseComputedFormula" Type="String" />
+        <Column Name="Mixable" Type="Integer" />
+        <Column Name="TotalsConditionId" Type="String" />
+        <Column Name="CRUDStatus" Type="String" />
+        <Column Name="FieldListGroup" Type="String" />
+        <Column Name="ValidCombinationType" Type="String" />
+        <Column Name="Positive" Type="Integer" />
+        <Column Name="RangeMin" Type="String" />
+        <Column Name="RangeMax" Type="String" />
+        <Column Name="HorizontalAlignment" Type="String" />
+        <Column Name="VerticalAlignment" Type="String" />
+        <Column Name="WrapText" Type="String" />
+        <Column Name="EditingByDomain" Type="String" />
+        <Column Name="Represents" Type="String" />
+        <Column Name="ReverseTargetDomain" Type="String" />
+        <Column Name="ExternalLinkId" Type="String" />
+      </Columns>
+    </Table>
+  </Tables>
+</Model>
