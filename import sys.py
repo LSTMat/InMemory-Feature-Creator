@@ -3,6 +3,7 @@ import collections, re, typing, enum
 import os
 import Utils
 import pandas as pd
+from Utils import (IMFGCore)
 import xml.etree.ElementTree as ET
 from PyQt6.QtWidgets import (QApplication, QMainWindow, QWidget, QVBoxLayout, QMenuBar, 
                              QFileDialog, QTableWidget, QTableWidgetItem, QTabWidget, QCheckBox, QComboBox, 
@@ -91,8 +92,9 @@ class CSV_XML_Editor(QMainWindow):
         super().__init__()
         print("Initializing CSV_XML_Editor...")  # Debug log
         self.xml_structure = {}  # Stores the structure of InMemory XML
-        self.dm_inmemory_data: Utils.ModelConfiguration  # Stores data from user-loaded XML
+        self.dm_inmemory_data: Utils.ModelConfiguration = None  # Stores data from user-loaded XML
         self.dd_inmemory_data = Utils.get_DD_ModelConfiguration_Structure("G:/Git Repository/InMemory-Feature-Creator/TestFiles/DD Model only necessary.xml") # Stores data from DD XML
+        self.updating_dropdown = False  # Flag to prevent infinite loop
         self.initUI()
     
     def initUI(self):
@@ -125,7 +127,7 @@ class CSV_XML_Editor(QMainWindow):
         self.style_table(self.table1)
         self.table1.setColumnCount(5)
         self.table1.setRowCount(10)
-        self.table1.setHorizontalHeaderLabels(["Table Name", "Entity", "Domain", "View", "Alias Specific"])
+        self.table1.setHorizontalHeaderLabels([IMFGCore.Table1ColumnName.COLUMN_TABLE_NAME.value, IMFGCore.Table1ColumnName.COLUMN_IS_ENTITY.value, IMFGCore.Table1ColumnName.COLUMN_IS_DOMAIN.value, IMFGCore.Table1ColumnName.COLUMN_IS_VIEW.value, IMFGCore.Table1ColumnName.COLUMN_IS_ALIAS_SPECIFIC.value])
         self.initialize_table1()
         self.tabs.addTab(self.table1, "Tabelle")
         
@@ -135,8 +137,9 @@ class CSV_XML_Editor(QMainWindow):
         self.style_table(self.table2)
         self.table2.setColumnCount(5)
         self.table2.setRowCount(10)
-        self.table2.setHorizontalHeaderLabels(["Variable Name", "PK", "Table Name", "Allocation", "Domain"])
+        self.table2.setHorizontalHeaderLabels([IMFGCore.Table2ColumnName.COLUMN_VARIABLE_NAME.value, IMFGCore.Table2ColumnName.COLUMN_PK.value, IMFGCore.Table2ColumnName.COLUMN_TABLE_NAME.value, IMFGCore.Table2ColumnName.COLUMN_ALLOCATION.value, IMFGCore.Table2ColumnName.COLUMN_DOMAIN.value])
         self.initialize_table2()
+        self.table2.cellChanged.connect(self.on_table2_cell_changed)
         self.tabs.addTab(self.table2, "Calculation Plan")
         
         layout.addWidget(self.tabs)
@@ -171,7 +174,7 @@ class CSV_XML_Editor(QMainWindow):
         for row in range(10):
             self.table2.setCellWidget(row, 1, self.create_checkbox())
             self.table2.setCellWidget(row, 3, self.create_dropdown(["Replicate", "Proportional"]))
-            self.table2.setCellWidget(row, 4, self.create_dropdown(["None"]))
+            self.table2.setCellWidget(row, 4, self.create_dropdown([""]))
 
     def style_table(self, table):
         """Applies styling to tables based on system theme."""
@@ -200,7 +203,7 @@ class CSV_XML_Editor(QMainWindow):
         dialog = LoadXMLDialog(self)
         if dialog.exec():
             print("XML Configuration Loaded")
-            self.refresh_dropdowns()
+            #self.refresh_dropdowns()
     
     def generate_feature(self):
         """Saves the SQL content to a file, prompting the user for a save location."""
@@ -244,44 +247,52 @@ class CSV_XML_Editor(QMainWindow):
         widget.setLayout(layout)
         return widget
     
-    def refresh_dropdowns(self):
+    def refresh_dropdowns(self, EntityID : str = "", FilterValue : str = ""):
         """Refreshes all dropdowns in table2."""
-        domain_values = self.dm_inmemory_data.get_column_values("DMDomain", "Name")
+        if self.dm_inmemory_data is None:
+            return
+        
+        domain_values = self.dm_inmemory_data.get_column_values_filtered(table_name=IMFGCore.IMConfigurationTable.DOMAIN.value, column_name=IMFGCore.IMConfigurationTableDomain.NAME.value, FilterColumn = EntityID, FilterValue = FilterValue)
         dropdown: QComboBox
-        for row in range(self.table2.rowCount()):
-            dropdown = self.table2.cellWidget(row, 4)
-            currentValue = dropdown.currentText()
-            if currentValue != "None":
-                self.table2.setCellWidget(row, 4, self.create_dropdown(domain_values, addNone = True, currentValue = currentValue))
-            else:
-                self.table2.setCellWidget(row, 4, self.create_dropdown(domain_values, addNone = True))
 
-    def create_dropdown(self, options: collections.abc.Iterable[typing.Optional[str]], addNone: bool = False, currentValue: str = "None"):
+        for row in range(self.table2.rowCount()):
+            dropdown = self.table2.cellWidget(row, IMFGCore.Table2ColumnOrder.COLUMN_DOMAIN.value - 1)
+            currentValue = dropdown.currentText()
+            if FilterValue is not "" or FilterValue is None:
+                self.table2.setCellWidget(row, IMFGCore.Table2ColumnOrder.COLUMN_DOMAIN.value - 1, self.create_dropdown(domain_values, addNone=True, currentValue=currentValue))
+            else:
+                self.table2.setCellWidget(row, IMFGCore.Table2ColumnOrder.COLUMN_DOMAIN.value - 1, self.create_dropdown(domain_values, addNone=True))
+
+    def create_dropdown(self, options: collections.abc.Iterable[typing.Optional[str]], addNone: bool = False, currentValue: str = ""):
         dropdown = QComboBox()
-        dropdown.setEditable(True)
-        #dropdown.lineEdit().textChanged.connect(lambda text, dd=dropdown, opts=options: self.filter_dropdown(dd, opts, text))
-        dropdown.setStyleSheet(
-            "QComboBox QAbstractItemView {"
-            "selection-background-color: #0078D7;"
-            "}" 
-        )
+
         if addNone:
-            dropdown.addItem("None")
+            dropdown.addItem("")
+
+        if isinstance(options, str):
+            options = [options]
 
         if len(options) != 0:
             dropdown.addItems(options)
-                
-        if currentValue != "None":
+
+        if currentValue != "":
             dropdown.setCurrentText(currentValue)
+        else:
+            dropdown.setCurrentText("")
         return dropdown
-    
-    def filter_dropdown(self, dropdown: QComboBox, options: collections.abc.Iterable[typing.Optional[str]], text: str):
-        """Filters dropdown values based on user input."""
-        dropdown.blockSignals(True)
-        dropdown.clear()
-        filtered_options = [option for option in options if text.lower() in option.lower()] if text else options
-        dropdown.addItems(filtered_options if filtered_options else options)
-        dropdown.blockSignals(False)
+
+    def on_table2_cell_changed(self, row, column):
+        """Slot to handle cell changes in table2."""
+        print(f"Cell changed at row {row}, column {column}")  # Debug log
+
+        column_label = self.table2.horizontalHeaderItem(column).text()
+
+        if column_label == IMFGCore.Table2ColumnName.COLUMN_TABLE_NAME.value:
+            item = self.table2.item(row, column)
+            filter_value = item.text()
+            #print(f"Filter value: {filter_value}")  # Debug log
+            self.refresh_dropdowns(EntityID=IMFGCore.IMConfigurationTableDomain.ENTITYID.value, FilterValue=filter_value)
+        
 
     def get_button_style(self):
         """Returns the appropriate button style based on system theme."""

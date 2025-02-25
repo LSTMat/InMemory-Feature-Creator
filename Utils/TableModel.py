@@ -129,7 +129,7 @@ class Table:
         return [row.get_column_value(column_name) for row in self._rows.values() if row.get_column_value(column_name) is not None]
 
     def filter_rows_by_condition(self, where_column_name: str, condition_value: str) -> list[Row]:
-        return self._index.get(where_column_name, {}).get(condition_value, [])
+        return [row for row in self._rows.values() if row.get_columns()[where_column_name].get_value() == condition_value]
     
     def add_row(self, columns: Dict[str, Column]) -> int:
         """Adds a new row with auto-generated row number (max + 1)."""
@@ -269,4 +269,13 @@ class ModelConfiguration:
         for table in self.Tables:
             if table.get_table_name() == table_name:
                 return table.update_row_values_by_condition(where_column, where_value, update_columns)  # Retrieve column values from the matching table
+        return []  # Return an empty list if no matching table is found
+
+    def get_column_values_filtered(self, table_name: str, column_name: str, FilterColumn: str, FilterValue : str) -> List[str]:
+        for table in self.Tables:
+            if table.get_table_name() == table_name:
+                print("Table Name: ", table_name)
+                Rows = table.filter_rows_by_condition(FilterColumn, FilterValue)
+                for Row in Rows:
+                    return Row.get_column_value(column_name)  # Retrieve column values from the matching table
         return []  # Return an empty list if no matching table is found
