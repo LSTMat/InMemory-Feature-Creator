@@ -84,4 +84,4 @@ class Table:
         return [row.get_column_value(column_name) for row in self._rows.values() if row.get_column_value(column_name) is not None]
 
     def filter_rows_by_condition(self, where_column_name: str, condition_value: str) -> list[Row]:
-        return self._index.get(where_column_name, {}).get(condition_value, [])
+        return [row for row in self._rows.values() if row.get_columns()[where_column_name].get_value() == condition_value]

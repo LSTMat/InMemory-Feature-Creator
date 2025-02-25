@@ -1,7 +1,7 @@
 from dataclasses import dataclass, field
 from typing import List, Dict
 import xml.etree.ElementTree as ET
-from .TableModel import Table, Row, Column
+from Utils.TableModel import Table, Row, Column
 
 @dataclass(slots=True, frozen=True)
 class InMemoryConfiguration:
@@ -13,6 +13,15 @@ class InMemoryConfiguration:
         for table in self.Tables:
             if table.get_table_name() == table_name:
                 return table.get_column_values(column_name)  # Retrieve column values from the matching table
+        return []  # Return an empty list if no matching table is found
+
+    def get_column_values_filtered(self, table_name: str, column_name: str, FilterColumn: str, FilterValue : str) -> List[str]:
+        for table in self.Tables:
+            if table.get_table_name() == table_name:
+                print("Table Name: ", table_name)
+                Rows = table.filter_rows_by_condition(FilterColumn, FilterValue)
+                for Row in Rows:
+                    return Row.get_column_value(column_name)  # Retrieve column values from the matching table
         return []  # Return an empty list if no matching table is found
 
 def load_xml_to_config(file_path: str, metadata_file: str) -> InMemoryConfiguration:
