@@ -1,5 +1,7 @@
 from enum import Enum
 
+DD_MODEL_FILE = "DD\\DD Model only necessary.xml"
+
 class Table1ColumnName(Enum):
     COLUMN_TABLE_NAME = "Table Name"
     COLUMN_IS_ENTITY = "Is Entity"

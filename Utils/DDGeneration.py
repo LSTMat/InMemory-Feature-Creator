@@ -1,16 +1,20 @@
 import xml.etree.ElementTree as ET
+import os
 from dataclasses import dataclass, field
 from typing import List, Optional
 from .TableModel import ModelConfiguration, Table, Row, Column, Value
 
 
 def get_DD_ModelConfiguration_Structure(file_path: str) -> ModelConfiguration:
+    
     def get_xml_from_file(file_path: str) -> Optional[ET.Element]:
         try:
-            with open(file_path, "r", encoding="utf-8", errors="ignore") as file:
+            base_path = os.path.dirname(os.path.dirname(__file__))  # Get one folder before the current file's directory
+            full_path = os.path.join(base_path, file_path)
+            with open(full_path, "r", encoding="utf-8", errors="ignore") as file:
                 return ET.fromstring(file.read())  # Parse the XML file into an ElementTree object
         except ET.ParseError as e:
-            print(f"Error parsing XML file {file_path}: {e}")
+            print(f"Error parsing XML file {full_path}: {e}")
             return None
     
     root = get_xml_from_file(file_path)

@@ -92,7 +92,7 @@ class CSV_XML_Editor(QMainWindow):
         print("Initializing CSV_XML_Editor...")  # Debug log
         self.xml_structure = {}  # Stores the structure of InMemory XML
         self.dm_inmemory_data: Utils.ModelConfiguration = None  # Stores data from user-loaded XML
-        self.dd_inmemory_data = Utils.get_DD_ModelConfiguration_Structure("G:/Git Repository/InMemory-Feature-Creator/TestFiles/DD Model only necessary.xml") # Stores data from DD XML
+        self.dd_inmemory_data = Utils.get_DD_ModelConfiguration_Structure(Utils.DD_MODEL_FILE) # Stores data from DD XML
         self.updating_dropdown = False  # Flag to prevent infinite loop
         self.initUI()
     
