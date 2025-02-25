@@ -1,31 +1,9 @@
-from dataclasses import dataclass, field
-from typing import List, Dict
+from typing import Dict
 import xml.etree.ElementTree as ET
-from Utils.TableModel import Table, Row, Column
+from .TableModel import ModelConfiguration, Table, Row, Column
 
-@dataclass(slots=True, frozen=True)
-class InMemoryConfiguration:
-    """Configuration class that holds multiple tables, representing an in-memory database schema."""
-    Name: str  # Name of the configuration
-    Tables: List[Table] = field(default_factory=list)  # List of tables in the configuration
-
-    def get_column_values(self, table_name: str, column_name: str) -> List[str]:
-        for table in self.Tables:
-            if table.get_table_name() == table_name:
-                return table.get_column_values(column_name)  # Retrieve column values from the matching table
-        return []  # Return an empty list if no matching table is found
-
-    def get_column_values_filtered(self, table_name: str, column_name: str, FilterColumn: str, FilterValue : str) -> List[str]:
-        for table in self.Tables:
-            if table.get_table_name() == table_name:
-                print("Table Name: ", table_name)
-                Rows = table.filter_rows_by_condition(FilterColumn, FilterValue)
-                for Row in Rows:
-                    return Row.get_column_value(column_name)  # Retrieve column values from the matching table
-        return []  # Return an empty list if no matching table is found
-
-def load_xml_to_config(file_path: str, metadata_file: str) -> InMemoryConfiguration:
-    """Loads an XML file into an InMemoryConfiguration instance dynamically."""
+def load_xml_to_config(file_path: str, metadata_file: str) -> ModelConfiguration:
+    """Loads an XML file into an ModelConfiguration instance dynamically."""
     
     def parse_xml(file_path: str) -> ET.Element:
         try:
@@ -35,10 +13,13 @@ def load_xml_to_config(file_path: str, metadata_file: str) -> InMemoryConfigurat
             print(f"Error parsing XML file {file_path}: {e}")
             return None
     
+    if not file_path:
+        return ModelConfiguration(Name="Invalid File Path", Tables=[])
+
     root = parse_xml(file_path)
     metadata_root = parse_xml(metadata_file)
     if root is None or metadata_root is None:
-        return InMemoryConfiguration(Name="Invalid Configuration", Tables=[])
+        return ModelConfiguration(Name="Invalid Configuration", Tables=[])
     
     # Parse metadata file for table structure
     metadata_tables: Dict[str, Dict[str, Dict[str, str]]] = {}
@@ -49,7 +30,10 @@ def load_xml_to_config(file_path: str, metadata_file: str) -> InMemoryConfigurat
             columns = {
                 col.get("Name"): {
                     "Type": col.get("Type", "str"),  # Default column type is string
-                    "IsPK": col.get("IsPK", "false").lower() == "true"  # Convert primary key flag to boolean
+                    "IsPK": col.get("IsPK", "false").lower() == "true",  # Convert primary key flag to boolean
+                    "ReferenceTableSchema": col.get("ReferenceTableSchema", "false"),  # Name of the Reference Schema
+                    "ReferenceTableName": col.get("ReferenceTableName", "false"),  # Name of the Reference Table
+                    "ReferenceColumn": col.get("ReferenceColumn", "false")  # Name of the Reference Column Name
                 }
                 for col in table.findall("Columns/Column") if col.get("Name")  # Only process columns with a valid name
             }
@@ -78,12 +62,15 @@ def load_xml_to_config(file_path: str, metadata_file: str) -> InMemoryConfigurat
             if not column_name:
                 continue  # Skip columns without names
             column_value = column_element.text.strip() if column_element.text else None  # Use None for missing values
-            metadata = metadata_tables.get(table_key, {}).get(column_name, {"Type": "str", "IsPK": False})  # Get column metadata
-            columns[column_name] = Column(name=column_name, column_type=metadata["Type"], is_pk=metadata["IsPK"], value=column_value)
+            metadata = metadata_tables.get(table_key, {}).get(column_name, {"Type": "str", "IsPK": False, "ReferenceTableSchema": None, "ReferenceTableName": None, "ReferenceColumn": None})  # Get column metadata
+            columns[column_name] = Column(name=column_name, column_type=metadata["Type"], is_pk=metadata["IsPK"], value=column_value,
+                                            reference_table_schema=metadata["ReferenceTableSchema"],
+                                            reference_table_name=metadata["ReferenceTableName"],
+                                            reference_column=metadata["ReferenceColumn"])
 
         row_number = max(tables[table_key].get_rows().keys(), default=-1) + 1
         row = Row(row_number=row_number, columns=columns)  # Create a new row with column data
         new_rows = {**tables[table_key].get_rows(), row_number: row}
         object.__setattr__(tables[table_key], "_rows", new_rows)  # Add the row to the respective table 
     
-    return InMemoryConfiguration(Name=config_name, Tables=list(tables.values()))
+    return ModelConfiguration(Name=config_name, Tables=list(tables.values()))

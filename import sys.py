@@ -1,7 +1,7 @@
 import sys
 import collections, re, typing, enum
 import os
-import Utils as DM
+import Utils
 import pandas as pd
 from Utils import (IMFGCore)
 import xml.etree.ElementTree as ET
@@ -10,6 +10,8 @@ from PyQt6.QtWidgets import (QApplication, QMainWindow, QWidget, QVBoxLayout, QM
                              QHBoxLayout, QPushButton, QHeaderView, QSpinBox, QDialog, QLabel, QLineEdit)
 from PyQt6.QtGui import QAction, QFont, QPalette, QColor
 from PyQt6.QtCore import Qt
+
+import Utils.TableModel
 
 class LoadXMLDialog(QDialog):
     def __init__(self, parent=None):
@@ -46,6 +48,7 @@ class LoadXMLDialog(QDialog):
         self.ok_button = QPushButton("OK")
         self.ok_button.setFixedWidth(80)
         self.ok_button.clicked.connect(self.handle_ok)
+        self.ok_button.setDisabled(True)
         button_layout.addWidget(self.ok_button)
         
         layout.addLayout(config_layout)
@@ -60,7 +63,7 @@ class LoadXMLDialog(QDialog):
         selected_config_path = self.config_paths.get(selected_config_name, "")
         selected_file = self.file_path_display.text()
         print(f"Selected Configuration Path: {selected_config_path}, Selected File: {selected_file}")
-        self.parent().inmemory_data = DM.load_xml_to_config(selected_file, selected_config_path)
+        self.parent().dm_inmemory_data = Utils.load_xml_to_config(selected_file, selected_config_path)
         self.accept()
 
     def refresh_configurations(self):
@@ -82,13 +85,15 @@ class LoadXMLDialog(QDialog):
         if file_path:
             self.file_path_display.setText(file_path)
             self.file_name_display.setText(os.path.basename(file_path))
+            self.ok_button.setDisabled(True) if not self.config_dropdown.currentText() else self.ok_button.setDisabled(False)
 
 class CSV_XML_Editor(QMainWindow):
     def __init__(self):
         super().__init__()
         print("Initializing CSV_XML_Editor...")  # Debug log
         self.xml_structure = {}  # Stores the structure of InMemory XML
-        self.inmemory_data: DM.InMemoryConfiguration = None  # Stores data from user-loaded XML
+        self.dm_inmemory_data: Utils.ModelConfiguration = None  # Stores data from user-loaded XML
+        self.dd_inmemory_data = Utils.get_DD_ModelConfiguration_Structure("G:/Git Repository/InMemory-Feature-Creator/TestFiles/DD Model only necessary.xml") # Stores data from DD XML
         self.updating_dropdown = False  # Flag to prevent infinite loop
         self.initUI()
     
@@ -200,10 +205,11 @@ class CSV_XML_Editor(QMainWindow):
             print("XML Configuration Loaded")
             #self.refresh_dropdowns()
     
-    def generate_feature(self, sql_content):
+    def generate_feature(self):
         """Saves the SQL content to a file, prompting the user for a save location."""
         options = QFileDialog.Option.ReadOnly
         file_path, _ = QFileDialog.getSaveFileName(self, "Save SQL File", "", "SQL Files (*.sql)", options=options)
+        sql_content = Utils.generate_insert_sql(self.dm_inmemory_data.get_Table("DMDomain"))
         if file_path:
             with open(file_path, 'w', encoding='utf-8') as file:
                 file.write(sql_content)
@@ -243,10 +249,10 @@ class CSV_XML_Editor(QMainWindow):
     
     def refresh_dropdowns(self, EntityID : str = "", FilterValue : str = ""):
         """Refreshes all dropdowns in table2."""
-        if self.inmemory_data is None:
+        if self.dm_inmemory_data is None:
             return
         
-        domain_values = self.inmemory_data.get_column_values_filtered(table_name=IMFGCore.IMConfigurationTable.DOMAIN.value, column_name=IMFGCore.IMConfigurationTableDomain.NAME.value, FilterColumn = EntityID, FilterValue = FilterValue)
+        domain_values = self.dm_inmemory_data.get_column_values_filtered(table_name=IMFGCore.IMConfigurationTable.DOMAIN.value, column_name=IMFGCore.IMConfigurationTableDomain.NAME.value, FilterColumn = EntityID, FilterValue = FilterValue)
         dropdown: QComboBox
 
         for row in range(self.table2.rowCount()):
