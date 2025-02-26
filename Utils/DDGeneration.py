@@ -29,14 +29,16 @@ def get_DD_ModelConfiguration_Structure(file_path: str) -> ModelConfiguration:
             name = column_element.get("Name")
             type = column_element.get("Type")
             is_pk = column_element.get("IsPK", "false").lower() == "true"
+            is_identity = column_element.get("IsIdentity", "false").lower() == "true"
             reference_table_schema = column_element.get("ReferenceTableSchema")
             reference_table_name = column_element.get("ReferenceTableName")
             reference_column = column_element.get("ReferenceColumn")
             
             column = Column(
-                name=name,
+                column_name=name,
                 column_type=type,
                 is_pk=is_pk,
+                is_identity=is_identity,
                 reference_table_schema=reference_table_schema,
                 reference_table_name=reference_table_name,
                 reference_column=reference_column

@@ -1,19 +1,25 @@
 from dataclasses import dataclass, field
 from typing import Dict, List, Optional
+from .IMFGCore import DataType, DataTypeName, get_type
 
 @dataclass(slots=True)
 class Value:
     _value: str  # Stores the actual value of the column
+    _value_type: DataType  # Data type of the value
 
-    def __init__(self, value: str):
+    def __init__(self, value: str, value_type: DataType = DataType.STRING):
         # Use object.__setattr__ to set values since the class is frozen
         object.__setattr__(self, "_value", value)
+        object.__setattr__(self, "_value", value_type)
 
     def set_value(self, new_value: str):
         self._value = new_value
     
     def get_value(self) -> str:
         return self._value
+    
+    def get_type(self) -> DataType:
+        return self._value_type
     
 @dataclass(slots=True)
 class Column:
@@ -32,13 +38,13 @@ class Column:
                  , reference_table_name: Optional[str] = None
                  , reference_column: Optional[str] = None):
         # Use object.__setattr__ to set values since the class is frozen
-        object.__setattr__(self, "_value", Value(value))
         object.__setattr__(self, "_name", name)
         object.__setattr__(self, "_is_pk", is_pk)
         object.__setattr__(self, "_column_type", column_type)
         object.__setattr__(self, "_reference_table_schema", reference_table_schema)
         object.__setattr__(self, "_reference_table_name", reference_table_name)
         object.__setattr__(self, "_reference_column", reference_column)
+        object.__setattr__(self, "_value", Value(value, get_type(column_type)))
 
     def set_value(self, new_value: str):
         if self._value is None:
@@ -51,6 +57,30 @@ class Column:
     
     def get_name(self) -> str:
         return self._name
+    
+    def get_column_type(self) -> str:
+        return self._column_type
+    
+    def get_type(self) -> DataType:
+        match self._column_type:
+            case DataTypeName.STRING:
+                return DataType.STRING
+            case DataTypeName.INTEGER:
+                return DataType.INTEGER
+            case DataTypeName.FLOAT:
+                return DataType.FLOAT
+            case DataTypeName.BOOLEAN:
+                return DataType.BOOLEAN
+            case DataTypeName.LIST:
+                return DataType.LIST
+            case DataTypeName.DICTIONARY:
+                return DataType.DICTIONARY
+            case DataTypeName.DATETIME:
+                return DataType.DATETIME
+            case DataTypeName.BINARY:
+                return DataType.BINARY
+            case _:
+                return DataType.STRING
     
     def is_primary_key(self) -> bool:
         return self._is_pk
@@ -110,6 +140,39 @@ class Table:
                     self._index[column_name][column.get_value()] = []
                 self._index[column_name][column.get_value()].append(row)
     
+    @classmethod
+    def from_existing_rows(cls, table_name: str, existing_rows: List[Row], schema_name: Optional[str] = None):
+        """
+        Custom constructor to create a Table instance from existing rows.
+
+        Args:
+            table_name (str): The name of the table.
+            existing_rows (List[Row]): A list of Row objects to initialize the table with.
+            schema_name (Optional[str]): The schema name of the table. Defaults to 'dbo'.
+
+        Returns:
+            Table: An instance of the Table class.
+        """
+        rows_dict = {row.get_row_number(): row for row in existing_rows}
+        return cls(table_name=table_name, rows=rows_dict, schema_name=schema_name)
+
+    @classmethod
+    def from_columns(cls, table_name: str, columns: Dict[str, Column], schema_name: Optional[str] = None):
+        """
+        Custom constructor to create a Table instance from a dictionary of columns.
+
+        Args:
+            table_name (str): The name of the table.
+            columns (Dict[str, Column]): A dictionary of Column objects to initialize the table with.
+            schema_name (Optional[str]): The schema name of the table. Defaults to 'dbo'.
+
+        Returns:
+            Table: An instance of the Table class.
+        """
+        row = Row(row_number=0, columns=columns)
+        rows_dict = {row.get_row_number(): row}
+        return cls(schema_name=schema_name if schema_name is not None else "dbo", table_name=table_name, rows=rows_dict)
+
     def row_exists(self, row_number: int) -> bool:
         for index in self._rows:
             if index == row_number:

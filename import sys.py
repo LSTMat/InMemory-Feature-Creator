@@ -92,6 +92,10 @@ class CSV_XML_Editor(QMainWindow):
         super().__init__()
         print("Initializing CSV_XML_Editor...")  # Debug log
         self.xml_structure = {}  # Stores the structure of InMemory XML
+
+        self.Table1Data = Utils.ModelConfiguration("Tabelle")  # Stores data from user-loaded XML
+        self.Table2Data = Utils.ModelConfiguration("Tabelle")  # Stores data from user-loaded XML
+
         self.dm_inmemory_data: Utils.ModelConfiguration = None  # Stores data from user-loaded XML
         self.dd_inmemory_data = Utils.get_DD_ModelConfiguration_Structure("G:/Git Repository/InMemory-Feature-Creator/TestFiles/DD Model only necessary.xml") # Stores data from DD XML
         self.updating_dropdown = False  # Flag to prevent infinite loop
@@ -103,7 +107,9 @@ class CSV_XML_Editor(QMainWindow):
         self.setWindowTitle("InMemory Auto Generate Feature")
         self.setGeometry(100, 100, 900, 700)
         self.create_menu()
-
+        table1Columns = [Utils.Table1ColumnName.COLUMN_TABLE_NAME.value, Utils.Table1ColumnName.COLUMN_IS_ENTITY.value, Utils.Table1ColumnName.COLUMN_IS_DOMAIN.value, Utils.Table1ColumnName.COLUMN_IS_VIEW.value, Utils.Table1ColumnName.COLUMN_IS_ALIAS_SPECIFIC.value]
+        table2Columns = [Utils.Table2ColumnName.COLUMN_VARIABLE_NAME.value, Utils.Table2ColumnName.COLUMN_PK.value, Utils.Table2ColumnName.COLUMN_TABLE_NAME.value, Utils.Table2ColumnName.COLUMN_ALLOCATION.value, Utils.Table2ColumnName.COLUMN_DOMAIN.value]
+        
         self.central_widget = QWidget()
         self.setCentralWidget(self.central_widget)
         layout = QVBoxLayout()
@@ -127,8 +133,9 @@ class CSV_XML_Editor(QMainWindow):
         self.style_table(self.table1)
         self.table1.setColumnCount(5)
         self.table1.setRowCount(10)
-        self.table1.setHorizontalHeaderLabels([IMFGCore.Table1ColumnName.COLUMN_TABLE_NAME.value, IMFGCore.Table1ColumnName.COLUMN_IS_ENTITY.value, IMFGCore.Table1ColumnName.COLUMN_IS_DOMAIN.value, IMFGCore.Table1ColumnName.COLUMN_IS_VIEW.value, IMFGCore.Table1ColumnName.COLUMN_IS_ALIAS_SPECIFIC.value])
+        self.table1.setHorizontalHeaderLabels(table1Columns)
         self.initialize_table1()
+        self.table1.cellChanged.connect(self.on_table1_cell_changed)
         self.tabs.addTab(self.table1, "Tabelle")
         
         # Table 2 setup
@@ -137,7 +144,7 @@ class CSV_XML_Editor(QMainWindow):
         self.style_table(self.table2)
         self.table2.setColumnCount(5)
         self.table2.setRowCount(10)
-        self.table2.setHorizontalHeaderLabels([IMFGCore.Table2ColumnName.COLUMN_VARIABLE_NAME.value, IMFGCore.Table2ColumnName.COLUMN_PK.value, IMFGCore.Table2ColumnName.COLUMN_TABLE_NAME.value, IMFGCore.Table2ColumnName.COLUMN_ALLOCATION.value, IMFGCore.Table2ColumnName.COLUMN_DOMAIN.value])
+        self.table2.setHorizontalHeaderLabels(table2Columns)
         self.initialize_table2()
         self.table2.cellChanged.connect(self.on_table2_cell_changed)
         self.tabs.addTab(self.table2, "Calculation Plan")
@@ -280,6 +287,10 @@ class CSV_XML_Editor(QMainWindow):
         else:
             dropdown.setCurrentText("")
         return dropdown
+    
+    def on_table1_cell_changed(self, row, column):
+        """Slot to handle cell changes in table2."""
+        print(f"Cell changed at row {row}, column {column}")  # Debug log
 
     def on_table2_cell_changed(self, row, column):
         """Slot to handle cell changes in table2."""
