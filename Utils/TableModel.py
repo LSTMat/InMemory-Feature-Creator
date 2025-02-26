@@ -129,7 +129,11 @@ class Table:
         return [row.get_column_value(column_name) for row in self._rows.values() if row.get_column_value(column_name) is not None]
 
     def filter_rows_by_condition(self, where_column_name: str, condition_value: str) -> list[Row]:
-        return [row for row in self._rows.values() if row.get_columns()[where_column_name].get_value() == condition_value]
+        result = []
+        for row in self._rows.values():
+            if row.get_columns()[where_column_name].get_value() == condition_value:
+                result.append(row)
+        return result
     
     def add_row(self, columns: Dict[str, Column]) -> int:
         """Adds a new row with auto-generated row number (max + 1)."""
@@ -247,35 +251,43 @@ class ModelConfiguration:
                 return table.add_row(columns)  # Retrieve column values from the matching table
         return None  # Return an empty list if no matching table is found
     
-    def set_column_value_by_row_number(self, table_name: str, row_number: str, column_name: str, new_value: str) -> List[str]:
+    def set_column_value_by_row_number(self, table_name: str, row_number: int, column_name: str, new_value: str):
         for table in self.Tables:
             if table.get_table_name() == table_name:
-                return table.update_row_value_by_row_number(row_number, column_name=column_name, new_value=new_value)  # Retrieve column values from the matching table
-        return []  # Return an empty list if no matching table is found
+                table.update_row_value_by_row_number(row_number, column_name=column_name, new_value=new_value)  # Retrieve column values from the matching table
+                return
     
-    def set_column_values_by_row_number(self, table_name: str, row_number: str, update_columns: Dict[str, str]) -> List[str]:
+    def set_column_values_by_row_number(self, table_name: str, row_number: int, update_columns: Dict[str, str]):
         for table in self.Tables:
             if table.get_table_name() == table_name:
-                return table.update_row_values_by_row_number(row_number, update_columns)  # Retrieve column values from the matching table
-        return []  # Return an empty list if no matching table is found
+                table.update_row_values_by_row_number(row_number, update_columns)  # Retrieve column values from the matching table
+                return
     
-    def set_column_value_by_condition(self, table_name: str, where_column: str, where_value: str, column_name: str, new_value: str) -> List[str]:
+    def set_column_value_by_condition(self, table_name: str, where_column: str, where_value: str, column_name: str, new_value: str):
         for table in self.Tables:
             if table.get_table_name() == table_name:
-                return table.update_row_value_by_condition(where_column, where_value, column_name=column_name, new_value=new_value)  # Retrieve column values from the matching table
-        return []  # Return an empty list if no matching table is found
+                table.update_row_value_by_condition(where_column, where_value, column_name=column_name, new_value=new_value)  # Retrieve column values from the matching table
+                return
     
-    def set_column_values_by_condition(self, table_name: str, where_column: str, where_value: str, update_columns: Dict[str, str]) -> List[str]:
+    def set_column_values_by_condition(self, table_name: str, where_column: str, where_value: str, update_columns: Dict[str, str]):
         for table in self.Tables:
             if table.get_table_name() == table_name:
-                return table.update_row_values_by_condition(where_column, where_value, update_columns)  # Retrieve column values from the matching table
-        return []  # Return an empty list if no matching table is found
+                table.update_row_values_by_condition(where_column, where_value, update_columns)  # Retrieve column values from the matching table
+                return
 
     def get_column_values_filtered(self, table_name: str, column_name: str, FilterColumn: str, FilterValue : str) -> List[str]:
         for table in self.Tables:
             if table.get_table_name() == table_name:
                 print("Table Name: ", table_name)
                 Rows = table.filter_rows_by_condition(FilterColumn, FilterValue)
+                if len(Rows) == 0:
+                    return []
+                ValueList = []
                 for Row in Rows:
-                    return Row.get_column_value(column_name)  # Retrieve column values from the matching table
+                    ValueList.append(Row.get_column_value(column_name))  # Retrieve column values from the matching table
+                return ValueList
         return []  # Return an empty list if no matching table is found
+    
+    def add_table(self, table: Table):
+        """Adds a new table to the configuration."""
+        self.Tables.append(table)

@@ -3,36 +3,80 @@ from enum import Enum
 DD_MODEL_FILE = "DD\\DD Model only necessary.xml"
 
 class Table1ColumnName(Enum):
-    COLUMN_TABLE_NAME = "Table Name"
-    COLUMN_IS_ENTITY = "Is Entity"
-    COLUMN_IS_DOMAIN = "Is Domain"
-    COLUMN_IS_VIEW = "Is View"
-    COLUMN_IS_ALIAS_SPECIFIC = "Is Alias Specific"
+    COLUMN_TABLE_NAME           = "Table Name"
+    COLUMN_IS_ENTITY            = "Is Entity"
+    COLUMN_IS_DOMAIN            = "Is Domain"
+    COLUMN_IS_VIEW              = "Is View"
+    COLUMN_IS_ALIAS_SPECIFIC    = "Is Alias Specific"
 
 class Table1ColumnOrder(Enum):
-    COLUMN_TABLE_NAME = 1
-    COLUMN_IS_ENTITY = 2
-    COLUMN_IS_DOMAIN = 3
-    COLUMN_IS_VIEW = 4
-    COLUMN_IS_ALIAS_SPECIFIC = 5
+    COLUMN_TABLE_NAME           = 1
+    COLUMN_IS_ENTITY            = 2
+    COLUMN_IS_DOMAIN            = 3
+    COLUMN_IS_VIEW              = 4
+    COLUMN_IS_ALIAS_SPECIFIC    = 5
 
 class Table2ColumnName(Enum):
-    COLUMN_VARIABLE_NAME = "Variable Name"
-    COLUMN_PK = "PK"
-    COLUMN_TABLE_NAME = "Table Name"
-    COLUMN_ALLOCATION = "Allocation"
-    COLUMN_DOMAIN = "Domain"
+    COLUMN_VARIABLE_NAME    = "Variable Name"
+    COLUMN_PK               = "PK"
+    COLUMN_TABLE_NAME       = "Table Name"
+    COLUMN_ALLOCATION       = "Allocation"
+    COLUMN_DOMAIN           = "Domain"
 
 class Table2ColumnOrder(Enum):
-    COLUMN_VARIABLE_NAME = 1
-    COLUMN_PK = 2
-    COLUMN_TABLE_NAME = 3
-    COLUMN_ALLOCATION = 4
-    COLUMN_DOMAIN = 5
+    COLUMN_VARIABLE_NAME    = 1
+    COLUMN_PK               = 2
+    COLUMN_TABLE_NAME       = 3
+    COLUMN_ALLOCATION       = 4
+    COLUMN_DOMAIN           = 5
+
+class Table3ColumnName(Enum):
+    COLUMN_TABLE_NAME           = "Table Name"
+    COLUMN_VARIABLE_NAME        = "Variable Name"
+    COLUMN_IS_PK                = "Is PK"
+    COLUMN_IS_DOMAIN            = "Is Domain"
+    COLUMN_IS_VARIABLE          = "Is Variable"
+    COLUMN_VARIABLE_TYPE        = "Variable Type"
+    COLUMN_VARIABLE_PRECISION   = "Variable Precision"
+    COLUMN_VARIABLE_SCALE       = "Variable Scale"
+    COLUMN_VARIABLE_LENGHT      = "Variable Lenght"
+
+class Table3ColumnOrder(Enum):
+    COLUMN_TABLE_NAME           = 0
+    COLUMN_VARIABLE_NAME        = 1
+    COLUMN_IS_PK                = 2
+    COLUMN_IS_DOMAIN            = 3
+    COLUMN_IS_VARIABLE          = 4
+    COLUMN_VARIABLE_TYPE        = 5
+    COLUMN_VARIABLE_PRECISION   = 6
+    COLUMN_VARIABLE_SCALE       = 7
+    COLUMN_VARIABLE_LENGHT      = 8
+
+class VariableType(Enum):
+    INTEGER     = "INTEGER"
+    NVARCHAR    = "NVARCHAR"
+    DECIMAL     = "DECIMAL"
+    DATE        = "DATE"
+    DATETIME    = "DATETIME"
+
+class TabName(Enum):
+    TAB1    = "Tabelle"
+    TAB2    = "Calculation Plan"
+    TAB3    = "Variabili"
 
 class IMConfigurationTable(Enum):
-    DOMAIN = "DMDomain"
+    DOMAIN              = "DMDomain"
+    MODELTABLE          = "DMModelTable"
+    MODELTABLECOLUMN    = "DMModelTableColumn"
 
-class IMConfigurationTableDomain(Enum):
-    NAME = "Name"
-    ENTITYID = "EntityID"
+class IMConfigurationDomain(Enum):
+    NAME        = "Name"
+    ENTITYID    = "EntityID"
+
+class IMConfigurationModelTable(Enum):
+    MODELID         = "ModelID"
+    PHYSICALNAME    = "PhysicalName"
+
+class IMConfigurationModelTableColumn(Enum):
+    MODELID         = "ModelID"
+    FIELDNAME       = "FieldName"
