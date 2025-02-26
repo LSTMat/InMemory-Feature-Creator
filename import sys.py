@@ -253,7 +253,7 @@ class CSV_XML_Editor(QMainWindow):
         self.setWindowTitle("InMemory Auto Generate Feature")
         self.setGeometry(100, 100, 900, 700)
         self.create_menu()
-
+        
         self.central_widget = QWidget()
         self.setCentralWidget(self.central_widget)
         layout = QVBoxLayout()
@@ -477,10 +477,12 @@ class CSV_XML_Editor(QMainWindow):
 
         for row in range(self.table2.rowCount()):
             dropdown = self.table2.cellWidget(row, Utils.Table2ColumnOrder.COLUMN_DOMAIN.value - 1)
+            dropdown = self.table2.cellWidget(row, Utils.Table2ColumnOrder.COLUMN_DOMAIN.value - 1)
             currentValue = dropdown.currentText()
             if FilterValue != "" or FilterValue is None:
                 self.table2.setCellWidget(row, Utils.Table2ColumnOrder.COLUMN_DOMAIN.value - 1, self.create_dropdown(domain_values, addNone=True, currentValue=currentValue))
             else:
+                self.table2.setCellWidget(row, Utils.Table2ColumnOrder.COLUMN_DOMAIN.value - 1, self.create_dropdown(domain_values, addNone=True))
                 self.table2.setCellWidget(row, Utils.Table2ColumnOrder.COLUMN_DOMAIN.value - 1, self.create_dropdown(domain_values, addNone=True))
 
     def create_dropdown(self, options: collections.abc.Iterable[typing.Optional[str]], addNone: bool = False, currentValue: str = ""):

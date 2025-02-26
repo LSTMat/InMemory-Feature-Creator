@@ -1,6 +1,6 @@
 from typing import Dict
 import xml.etree.ElementTree as ET
-from .TableModel import ModelConfiguration, Table, Row, Column
+from .TableModel import ModelConfiguration, Table, Row, Column, Value
 
 def load_xml_to_config(file_path: str, metadata_file: str) -> ModelConfiguration:
     """Loads an XML file into an ModelConfiguration instance dynamically."""
@@ -31,6 +31,7 @@ def load_xml_to_config(file_path: str, metadata_file: str) -> ModelConfiguration
                 col.get("Name"): {
                     "Type": col.get("Type", "str"),  # Default column type is string
                     "IsPK": col.get("IsPK", "false").lower() == "true",  # Convert primary key flag to boolean
+                    "IsIdentity": col.get("IsIdentity", "false").lower() == "true",  # Convert identity flag to boolean
                     "ReferenceTableSchema": col.get("ReferenceTableSchema", "false"),  # Name of the Reference Schema
                     "ReferenceTableName": col.get("ReferenceTableName", "false"),  # Name of the Reference Table
                     "ReferenceColumn": col.get("ReferenceColumn", "false")  # Name of the Reference Column Name
@@ -63,7 +64,7 @@ def load_xml_to_config(file_path: str, metadata_file: str) -> ModelConfiguration
                 continue  # Skip columns without names
             column_value = column_element.text.strip() if column_element.text else None  # Use None for missing values
             metadata = metadata_tables.get(table_key, {}).get(column_name, {"Type": "str", "IsPK": False, "ReferenceTableSchema": None, "ReferenceTableName": None, "ReferenceColumn": None})  # Get column metadata
-            columns[column_name] = Column(name=column_name, column_type=metadata["Type"], is_pk=metadata["IsPK"], value=column_value,
+            columns[column_name] = Column(column_name=column_name, column_type=metadata["Type"], is_pk=metadata["IsPK"], value=column_value, is_identity=metadata["IsIdentity"],
                                             reference_table_schema=metadata["ReferenceTableSchema"],
                                             reference_table_name=metadata["ReferenceTableName"],
                                             reference_column=metadata["ReferenceColumn"])
