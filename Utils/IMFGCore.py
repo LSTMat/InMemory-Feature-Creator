@@ -8,7 +8,10 @@ class DataType:
     class Type(Enum):
         STRING = str
         INTEGER = int
+        SMALLINT = int
         FLOAT = float
+        DECIMAL = float
+        BIT = int
         BOOLEAN = bool
         LIST = list
         DICTIONARY = dict
@@ -16,35 +19,100 @@ class DataType:
         BINARY = bytes
 
     class TypeName(Enum):
-        STRING = "String"
-        INTEGER = "Integer"
-        FLOAT = "Float"
-        BOOLEAN = "Boolean"
-        LIST = "List"
-        DICTIONARY = "Dictionary"
-        DATETIME = "DateTime"
-        BINARY = "Binary"
+        STRING = "STRING"
+        INTEGER = "INTEGER"
+        SMALLINT = "SMALLINT"
+        FLOAT = "FLOAT"
+        DECIMAL = "DECIMAL"
+        BIT = "BIT"
+        BOOLEAN = "BOOLEAN"
+        LIST = "LIST"
+        DICTIONARY = "DICTIONARY"
+        DATETIME = "DATETIME"
+        BINARY = "BINARY"
 
-def get_variable_type(type_name: str) -> DataType.Type:
-    match type_name:
-        case DataType.TypeName.STRING.value:
-            return DataType.Type.STRING
-        case DataType.TypeName.INTEGER.value:
-            return DataType.Type.INTEGER
-        case DataType.TypeName.FLOAT.value:
-            return DataType.Type.FLOAT
-        case DataType.TypeName.BOOLEAN.value:
-            return DataType.Type.BOOLEAN
-        case DataType.TypeName.LIST.value:
-            return DataType.Type.LIST
-        case DataType.TypeName.DICTIONARY.value:
-            return DataType.Type.DICTIONARY
-        case DataType.TypeName.DATETIME.value:
-            return DataType.Type.DATETIME
-        case DataType.TypeName.BINARY.value:
-            return DataType.Type.BINARY
-        case _:
-            return DataType.Type.STRING
+    class DSType(Enum):
+        STRING = 12
+        INTEGER = 8
+        SMALLINT = 16
+        FLOAT = 6
+        DECIMAL = 5
+        BIT = 2
+        BOOLEAN = 2
+        DATETIME = 4
+        BINARY = 7
+        
+
+    @staticmethod
+    def get_variable_type(type_name: str) -> Type:
+        return {
+            DataType.TypeName.STRING.value: DataType.Type.STRING,
+            "NVARCHAR": DataType.Type.STRING,
+            DataType.TypeName.INTEGER.value: DataType.Type.INTEGER,
+            "INT": DataType.Type.INTEGER,
+            DataType.TypeName.FLOAT.value: DataType.Type.FLOAT,
+            DataType.TypeName.DECIMAL.value: DataType.Type.DECIMAL,
+            DataType.TypeName.BIT.value: DataType.Type.BIT,
+            DataType.TypeName.BOOLEAN.value: DataType.Type.BOOLEAN,
+            DataType.TypeName.LIST.value: DataType.Type.LIST,
+            DataType.TypeName.DICTIONARY.value: DataType.Type.DICTIONARY,
+            DataType.TypeName.DATETIME.value: DataType.Type.DATETIME,
+            "DATE": DataType.Type.DATETIME,
+            DataType.TypeName.BINARY.value: DataType.Type.BINARY,
+            "IMAGE": DataType.Type.BINARY
+        }.get(type_name.upper(), DataType.Type.STRING)
+    
+    @staticmethod
+    def get_variable_DSType(type_name: str) -> DSType:
+        return {
+            DataType.TypeName.STRING.value: DataType.DSType.STRING,
+            "NVARCHAR": DataType.DSType.STRING,
+            DataType.TypeName.INTEGER.value: DataType.DSType.INTEGER,
+            "INT": DataType.DSType.INTEGER,
+            DataType.TypeName.FLOAT.value: DataType.DSType.FLOAT,
+            DataType.TypeName.DECIMAL.value: DataType.DSType.DECIMAL,
+            DataType.TypeName.BIT.value: DataType.DSType.BIT,
+            DataType.TypeName.BOOLEAN.value: DataType.DSType.BOOLEAN,
+            DataType.TypeName.DATETIME.value: DataType.DSType.DATETIME,
+            "DATE": DataType.DSType.DATETIME,
+            DataType.TypeName.BINARY.value: DataType.DSType.BINARY,
+            "IMAGE": DataType.DSType.BINARY
+        }.get(type_name.upper(), DataType.DSType.STRING)
+    
+    @staticmethod
+    def get_variable_Aggregation(type_name: str) -> str:
+        return {
+            DataType.TypeName.STRING.value: "FirstChildStringStdOp",
+            "NVARCHAR": "FirstChildStringStdOp",
+            DataType.TypeName.INTEGER.value: "SumNumStdOp",
+            "INT": "SumNumStdOp",
+            DataType.TypeName.FLOAT.value: "SumNumStdOp",
+            DataType.TypeName.DECIMAL.value: "SumNumStdOp",
+            DataType.TypeName.BIT.value: "FirstChildStringStdOp",
+            DataType.TypeName.BOOLEAN.value: "FirstChildStringStdOp",
+            DataType.TypeName.DATETIME.value: "FirstChildDateTimeStdOp",
+            "DATE": "FirstChildDateTimeStdOp",
+            DataType.TypeName.BINARY.value: "FirstChildStringStdOp",
+            "IMAGE": "FirstChildStringStdOp"
+        }.get(type_name.upper(), "FirstChildStringStdOp")
+
+    @staticmethod
+    def get_variable_Allocation(type_name: str) -> str:
+        return {
+            DataType.TypeName.STRING.value: "ReplicateStringSplitStdOp",
+            "NVARCHAR": "ReplicateStringSplitStdOp",
+            DataType.TypeName.INTEGER.value: "ProportionalNumStdOp",
+            "INT": "ProportionalNumStdOp",
+            DataType.TypeName.FLOAT.value: "ProportionalNumStdOp",
+            DataType.TypeName.DECIMAL.value: "ProportionalNumStdOp",
+            DataType.TypeName.BIT.value: "ProportionalNumStdOp",
+            DataType.TypeName.BOOLEAN.value: "ProportionalNumStdOp",
+            DataType.TypeName.DATETIME.value: "ReplicateDateTimeSplitStdOp",
+            "DATE": "ReplicateDateTimeSplitStdOp",
+            DataType.TypeName.BINARY.value: "ReplicateStringSplitStdOp",
+            "IMAGE": "ReplicateStringSplitStdOp"
+        }.get(type_name.upper(), "ReplicateStringSplitStdOp")
+
 
 class Table1ColumnName(Enum):
     COLUMN_TABLE_NAME = "Table Name"
@@ -94,3 +162,4 @@ class IMConfigurationTable(Enum):
 class IMConfigurationTableDomain(Enum):
     NAME = "Name"
     ENTITYID = "EntityID"
+
