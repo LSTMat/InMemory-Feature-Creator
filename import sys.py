@@ -155,17 +155,17 @@ class Table3Dialog(QDialog):
                 if i > 0:
                     self.table3.insertRow(self.table3.rowCount())
                 self.table3.setItem(i, self.T3CO.COLUMN_VARIABLE_NAME.value - 1, QTableWidgetItem(VariableListDM[i]))
-                self.table3.setCellWidget(i, self.T3CO.COLUMN_IS_PK.value - 1, CSV_XML_Editor.create_checkbox(self))
-                self.table3.setCellWidget(i, self.T3CO.COLUMN_IS_DOMAIN.value - 1, CSV_XML_Editor.create_checkbox(self))
-                self.table3.setCellWidget(i, self.T3CO.COLUMN_IS_VARIABLE.value - 1, CSV_XML_Editor.create_checkbox(self))
-                self.table3.setCellWidget(i, self.T3CO.COLUMN_VARIABLE_TYPE.value - 1, CSV_XML_Editor.create_dropdown(self, [VT.INTEGER.value, VT.DECIMAL.value, VT.NVARCHAR.value, VT.DATE.value, VT.DATETIME.value]))
+                self.table3.setCellWidget(i, self.T3CO.COLUMN_IS_PK.value - 1, CSV_XML_Editor.create_checkbox(self, i, self.T3CO.COLUMN_IS_PK.value - 1, self.on_table3_state_changed))
+                self.table3.setCellWidget(i, self.T3CO.COLUMN_IS_DOMAIN.value - 1, CSV_XML_Editor.create_checkbox(self, i, self.T3CO.COLUMN_IS_DOMAIN.value - 1, self.on_table3_state_changed))
+                self.table3.setCellWidget(i, self.T3CO.COLUMN_IS_VARIABLE.value - 1, CSV_XML_Editor.create_checkbox(self, i, self.T3CO.COLUMN_IS_VARIABLE.value - 1, self.on_table3_state_changed))
+                self.table3.setCellWidget(i, self.T3CO.COLUMN_VARIABLE_TYPE.value - 1, CSV_XML_Editor.create_dropdown(self, [VT.INTEGER.value, VT.DECIMAL.value, VT.NVARCHAR.value, VT.DATETIME.value], self.on_table3_dropdown_changed))
                 CSV_XML_Editor.dm_User_Input.get_Table(Utils.TabName.TAB3.value).add_row(columns={
                     self.T3CN.COLUMN_TABLE_NAME.value           : Utils.Column(value=CSV_XML_Editor.TableValue  , column_name=self.T3CN.COLUMN_TABLE_NAME.value         , is_pk=True    , column_type="String"),
                     self.T3CN.COLUMN_VARIABLE_NAME.value        : Utils.Column(value=VariableListDM[i]          , column_name=self.T3CN.COLUMN_VARIABLE_NAME.value      , is_pk=True    , column_type="String"),
                     self.T3CN.COLUMN_IS_PK.value                : Utils.Column(value="False"                    , column_name=self.T3CN.COLUMN_IS_PK.value              , is_pk=False   , column_type="Boolean"),
                     self.T3CN.COLUMN_IS_DOMAIN.value            : Utils.Column(value="False"                    , column_name=self.T3CN.COLUMN_IS_DOMAIN.value          , is_pk=False   , column_type="Boolean"),
-                    self.T3CN.COLUMN_IS_VARIABLE.value          : Utils.Column(value="False"                    , column_name=self.T3CN.COLUMN_IS_VARIABLE.value        , is_pk=False   , column_type="Boolean"),
-                    self.T3CN.COLUMN_VARIABLE_TYPE.value        : Utils.Column(value=None                       , column_name=self.T3CN.COLUMN_VARIABLE_TYPE.value      , is_pk=False   , column_type="String"),
+                    self.T3CN.COLUMN_IS_VARIABLE.value          : Utils.Column(value="True"                     , column_name=self.T3CN.COLUMN_IS_VARIABLE.value        , is_pk=False   , column_type="Boolean"),
+                    self.T3CN.COLUMN_VARIABLE_TYPE.value        : Utils.Column(value=VT.INTEGER.value           , column_name=self.T3CN.COLUMN_VARIABLE_TYPE.value      , is_pk=False   , column_type="String"),
                     self.T3CN.COLUMN_VARIABLE_PRECISION.value   : Utils.Column(value=None                       , column_name=self.T3CN.COLUMN_VARIABLE_PRECISION.value , is_pk=False   , column_type="Integer"),
                     self.T3CN.COLUMN_VARIABLE_SCALE.value       : Utils.Column(value=None                       , column_name=self.T3CN.COLUMN_VARIABLE_SCALE.value     , is_pk=False   , column_type="Integer"),
                     self.T3CN.COLUMN_VARIABLE_LENGHT.value      : Utils.Column(value=None                       , column_name=self.T3CN.COLUMN_VARIABLE_LENGHT.value    , is_pk=False   , column_type="Integer"),
@@ -175,26 +175,30 @@ class Table3Dialog(QDialog):
                 if i > 0:
                     self.table3.insertRow(self.table3.rowCount())
                 self.table3.setItem(i, self.T3CO.COLUMN_VARIABLE_NAME.value - 1, QTableWidgetItem(VariableListUser[i]))
-                self.table3.setCellWidget(i, self.T3CO.COLUMN_IS_PK.value - 1, CSV_XML_Editor.create_checkbox(self))
-                self.table3.setCellWidget(i, self.T3CO.COLUMN_IS_DOMAIN.value - 1, CSV_XML_Editor.create_checkbox(self))
-                self.table3.setCellWidget(i, self.T3CO.COLUMN_IS_VARIABLE.value - 1, CSV_XML_Editor.create_checkbox(self))
-                self.table3.setCellWidget(i, self.T3CO.COLUMN_VARIABLE_TYPE.value - 1, CSV_XML_Editor.create_dropdown(self, [VT.INTEGER.value, VT.DECIMAL.value, VT.NVARCHAR.value, VT.DATE.value, VT.DATETIME.value]))
+                self.table3.setCellWidget(i, self.T3CO.COLUMN_IS_PK.value - 1, CSV_XML_Editor.create_checkbox(self, i, self.T3CO.COLUMN_IS_PK.value - 1, self.on_table3_state_changed, True if CSV_XML_Editor.dm_User_Input.get_Table(Utils.TabName.TAB3.value).get_rows()[i].get_column_value(self.T3CN.COLUMN_IS_PK.value) == "True" else False))
+                self.table3.setCellWidget(i, self.T3CO.COLUMN_IS_DOMAIN.value - 1, CSV_XML_Editor.create_checkbox(self, i, self.T3CO.COLUMN_IS_DOMAIN.value - 1, self.on_table3_state_changed, True if CSV_XML_Editor.dm_User_Input.get_Table(Utils.TabName.TAB3.value).get_rows()[i].get_column_value(self.T3CN.COLUMN_IS_DOMAIN.value) == "True" else False))
+                self.table3.setCellWidget(i, self.T3CO.COLUMN_IS_VARIABLE.value - 1, CSV_XML_Editor.create_checkbox(self, i, self.T3CO.COLUMN_IS_VARIABLE.value - 1, self.on_table3_state_changed, True if CSV_XML_Editor.dm_User_Input.get_Table(Utils.TabName.TAB3.value).get_rows()[i].get_column_value(self.T3CN.COLUMN_IS_VARIABLE.value) == "True" else False))
+                self.table3.setCellWidget(i, self.T3CO.COLUMN_VARIABLE_TYPE.value - 1, CSV_XML_Editor.create_dropdown(self, [VT.INTEGER.value, VT.DECIMAL.value, VT.NVARCHAR.value, VT.DATETIME.value], self.on_table3_dropdown_changed, currentValue=CSV_XML_Editor.dm_User_Input.get_Table(Utils.TabName.TAB3.value).get_rows()[i].get_column_value(self.T3CN.COLUMN_VARIABLE_TYPE.value)))
+                
+                self.table3.setItem(i, self.T3CO.COLUMN_VARIABLE_PRECISION.value - 1, QTableWidgetItem(CSV_XML_Editor.dm_User_Input.get_Table(Utils.TabName.TAB3.value).get_rows()[i].get_column_value(self.T3CN.COLUMN_VARIABLE_PRECISION.value)))
+                self.table3.setItem(i, self.T3CO.COLUMN_VARIABLE_SCALE.value - 1, QTableWidgetItem(CSV_XML_Editor.dm_User_Input.get_Table(Utils.TabName.TAB3.value).get_rows()[i].get_column_value(self.T3CN.COLUMN_VARIABLE_SCALE.value)))
+                self.table3.setItem(i, self.T3CO.COLUMN_VARIABLE_LENGHT.value - 1, QTableWidgetItem(CSV_XML_Editor.dm_User_Input.get_Table(Utils.TabName.TAB3.value).get_rows()[i].get_column_value(self.T3CN.COLUMN_VARIABLE_LENGHT.value)))
         else:
             CSV_XML_Editor.dm_User_Input.get_Table(Utils.TabName.TAB3.value).add_row(columns={
                 self.T3CN.COLUMN_TABLE_NAME.value           : Utils.Column(value=CSV_XML_Editor.TableValue  , column_name=self.T3CN.COLUMN_TABLE_NAME.value         , is_pk=True    , column_type="String"),
                 self.T3CN.COLUMN_VARIABLE_NAME.value        : Utils.Column(value=""                         , column_name=self.T3CN.COLUMN_VARIABLE_NAME.value      , is_pk=True    , column_type="String"),
                 self.T3CN.COLUMN_IS_PK.value                : Utils.Column(value="False"                    , column_name=self.T3CN.COLUMN_IS_PK.value              , is_pk=False   , column_type="Boolean"),
                 self.T3CN.COLUMN_IS_DOMAIN.value            : Utils.Column(value="False"                    , column_name=self.T3CN.COLUMN_IS_DOMAIN.value          , is_pk=False   , column_type="Boolean"),
-                self.T3CN.COLUMN_IS_VARIABLE.value          : Utils.Column(value="False"                    , column_name=self.T3CN.COLUMN_IS_VARIABLE.value        , is_pk=False   , column_type="Boolean"),
-                self.T3CN.COLUMN_VARIABLE_TYPE.value        : Utils.Column(value=None                       , column_name=self.T3CN.COLUMN_VARIABLE_TYPE.value      , is_pk=False   , column_type="Integer"),
+                self.T3CN.COLUMN_IS_VARIABLE.value          : Utils.Column(value="True"                     , column_name=self.T3CN.COLUMN_IS_VARIABLE.value        , is_pk=False   , column_type="Boolean"),
+                self.T3CN.COLUMN_VARIABLE_TYPE.value        : Utils.Column(value=VT.INTEGER.value           , column_name=self.T3CN.COLUMN_VARIABLE_TYPE.value      , is_pk=False   , column_type="Integer"),
                 self.T3CN.COLUMN_VARIABLE_PRECISION.value   : Utils.Column(value=None                       , column_name=self.T3CN.COLUMN_VARIABLE_PRECISION.value , is_pk=False   , column_type="Integer"),
                 self.T3CN.COLUMN_VARIABLE_SCALE.value       : Utils.Column(value=None                       , column_name=self.T3CN.COLUMN_VARIABLE_SCALE.value     , is_pk=False   , column_type="Integer"),
                 self.T3CN.COLUMN_VARIABLE_LENGHT.value      : Utils.Column(value=None                       , column_name=self.T3CN.COLUMN_VARIABLE_LENGHT.value    , is_pk=False   , column_type="Integer"),
             })
-            self.table3.setCellWidget(0, Utils.Table3ColumnOrder.COLUMN_IS_PK.value - 1, CSV_XML_Editor.create_checkbox(self))
-            self.table3.setCellWidget(0, Utils.Table3ColumnOrder.COLUMN_IS_DOMAIN.value - 1, CSV_XML_Editor.create_checkbox(self))
-            self.table3.setCellWidget(0, Utils.Table3ColumnOrder.COLUMN_IS_VARIABLE.value - 1, CSV_XML_Editor.create_checkbox(self))
-            self.table3.setCellWidget(0, Utils.Table3ColumnOrder.COLUMN_VARIABLE_TYPE.value - 1, CSV_XML_Editor.create_dropdown(self, [VT.INTEGER.value, VT.DECIMAL.value, VT.NVARCHAR.value, VT.DATE.value, VT.DATETIME.value]))
+            self.table3.setCellWidget(0, Utils.Table3ColumnOrder.COLUMN_IS_PK.value - 1, CSV_XML_Editor.create_checkbox(self, 0, Utils.Table3ColumnOrder.COLUMN_IS_PK.value - 1, self.on_table3_state_changed))
+            self.table3.setCellWidget(0, Utils.Table3ColumnOrder.COLUMN_IS_DOMAIN.value - 1, CSV_XML_Editor.create_checkbox(self, 0, Utils.Table3ColumnOrder.COLUMN_IS_DOMAIN.value - 1, self.on_table3_state_changed))
+            self.table3.setCellWidget(0, Utils.Table3ColumnOrder.COLUMN_IS_VARIABLE.value - 1, CSV_XML_Editor.create_checkbox(self, 0, Utils.Table3ColumnOrder.COLUMN_IS_VARIABLE.value - 1, self.on_table3_state_changed, True))
+            self.table3.setCellWidget(0, Utils.Table3ColumnOrder.COLUMN_VARIABLE_TYPE.value - 1, CSV_XML_Editor.create_dropdown(self, [VT.INTEGER.value, VT.DECIMAL.value, VT.NVARCHAR.value, VT.DATETIME.value], self.on_table3_dropdown_changed))
         a=1
 
     def add_rows(self):
@@ -210,16 +214,16 @@ class Table3Dialog(QDialog):
                 self.T3CN.COLUMN_VARIABLE_NAME.value        : Utils.Column(value=""                         , column_name=self.T3CN.COLUMN_VARIABLE_NAME.value      , is_pk=True    , column_type="String"),
                 self.T3CN.COLUMN_IS_PK.value                : Utils.Column(value="False"                    , column_name=self.T3CN.COLUMN_IS_PK.value              , is_pk=False   , column_type="Boolean"),
                 self.T3CN.COLUMN_IS_DOMAIN.value            : Utils.Column(value="False"                    , column_name=self.T3CN.COLUMN_IS_DOMAIN.value          , is_pk=False   , column_type="Boolean"),
-                self.T3CN.COLUMN_IS_VARIABLE.value          : Utils.Column(value="False"                    , column_name=self.T3CN.COLUMN_IS_VARIABLE.value        , is_pk=False   , column_type="Boolean"),
-                self.T3CN.COLUMN_VARIABLE_TYPE.value        : Utils.Column(value=None                       , column_name=self.T3CN.COLUMN_VARIABLE_TYPE.value      , is_pk=False   , column_type="Integer"),
+                self.T3CN.COLUMN_IS_VARIABLE.value          : Utils.Column(value="True"                     , column_name=self.T3CN.COLUMN_IS_VARIABLE.value        , is_pk=False   , column_type="Boolean"),
+                self.T3CN.COLUMN_VARIABLE_TYPE.value        : Utils.Column(value=VT.INTEGER.value           , column_name=self.T3CN.COLUMN_VARIABLE_TYPE.value      , is_pk=False   , column_type="Integer"),
                 self.T3CN.COLUMN_VARIABLE_PRECISION.value   : Utils.Column(value=None                       , column_name=self.T3CN.COLUMN_VARIABLE_PRECISION.value , is_pk=False   , column_type="Integer"),
                 self.T3CN.COLUMN_VARIABLE_SCALE.value       : Utils.Column(value=None                       , column_name=self.T3CN.COLUMN_VARIABLE_SCALE.value     , is_pk=False   , column_type="Integer"),
                 self.T3CN.COLUMN_VARIABLE_LENGHT.value      : Utils.Column(value=None                       , column_name=self.T3CN.COLUMN_VARIABLE_LENGHT.value    , is_pk=False   , column_type="Integer"),
             })
-            self.table3.setCellWidget(row, Utils.Table3ColumnOrder.COLUMN_IS_PK.value - 1, CSV_XML_Editor.create_checkbox(self))
-            self.table3.setCellWidget(row, Utils.Table3ColumnOrder.COLUMN_IS_DOMAIN.value - 1, CSV_XML_Editor.create_checkbox(self))
-            self.table3.setCellWidget(row, Utils.Table3ColumnOrder.COLUMN_IS_VARIABLE.value - 1, CSV_XML_Editor.create_checkbox(self))
-            self.table3.setCellWidget(row, Utils.Table3ColumnOrder.COLUMN_VARIABLE_TYPE.value - 1, CSV_XML_Editor.create_dropdown(self, [VT.INTEGER.value, VT.DECIMAL.value, VT.NVARCHAR.value, VT.DATE.value, VT.DATETIME.value]))
+            self.table3.setCellWidget(row, Utils.Table3ColumnOrder.COLUMN_IS_PK.value - 1, CSV_XML_Editor.create_checkbox(self, row, Utils.Table3ColumnOrder.COLUMN_IS_PK.value - 1, self.on_table3_state_changed))
+            self.table3.setCellWidget(row, Utils.Table3ColumnOrder.COLUMN_IS_DOMAIN.value - 1, CSV_XML_Editor.create_checkbox(self, row, Utils.Table3ColumnOrder.COLUMN_IS_DOMAIN.value - 1, self.on_table3_state_changed))
+            self.table3.setCellWidget(row, Utils.Table3ColumnOrder.COLUMN_IS_VARIABLE.value - 1, CSV_XML_Editor.create_checkbox(self, row, Utils.Table3ColumnOrder.COLUMN_IS_VARIABLE.value - 1, self.on_table3_state_changed, True))
+            self.table3.setCellWidget(row, Utils.Table3ColumnOrder.COLUMN_VARIABLE_TYPE.value - 1, CSV_XML_Editor.create_dropdown(self, [VT.INTEGER.value, VT.DECIMAL.value, VT.NVARCHAR.value, VT.DATETIME.value], self.on_table3_dropdown_changed))
 
     def on_table3_cell_changed(self, row : int, column):
         """Slot to handle cell changes in table3."""
@@ -228,6 +232,22 @@ class Table3Dialog(QDialog):
         column_label = self.table3.horizontalHeaderItem(column).text()
         CSV_XML_Editor.dm_User_Input.set_column_value_by_row_number(Utils.TabName.TAB3.value, row, column_label, self.table3.item(row, column).text())
     
+    def on_table3_state_changed(self, state, row, column):
+        """Handles the state change of checkboxes."""
+        print(f"Checkbox state changed to: {state} at row: {row}, column: {column}")  # Debug log
+
+        column_label = self.table3.horizontalHeaderItem(column).text()
+        CSV_XML_Editor.dm_User_Input.set_column_value_by_row_number(Utils.TabName.TAB3.value, row, column_label, "False" if state == 0 else "True")
+    
+    def on_table3_dropdown_changed(self, dropdown):
+        """Handles the change event of dropdowns."""
+        row = self.table3.indexAt(dropdown.pos()).row()
+        column = self.table3.indexAt(dropdown.pos()).column()
+        new_value = dropdown.currentText()
+        column_label = self.table3.horizontalHeaderItem(column).text()
+        CSV_XML_Editor.dm_User_Input.set_column_value_by_row_number(Utils.TabName.TAB3.value, row, column_label, new_value)
+        print(f"Dropdown changed at row {row}, column {column} to {new_value}")  # Debug log
+        
     def get_button_style(self):
         """Returns the appropriate button style based on system theme."""
         if CSV_XML_Editor.check_dark_mode(self):
@@ -342,10 +362,10 @@ class CSV_XML_Editor(QMainWindow):
             self.T1CN.COLUMN_IS_VIEW.value           : Utils.Column(value="False"           , column_name=self.T1CN.COLUMN_IS_VIEW.value            , is_pk=False   , column_type="Boolean"),
             self.T1CN.COLUMN_IS_ALIAS_SPECIFIC.value : Utils.Column(value="False"           , column_name=self.T1CN.COLUMN_IS_ALIAS_SPECIFIC.value  , is_pk=False   , column_type="Boolean")
         })
-        self.table1.setCellWidget(0, Utils.Table1ColumnOrder.COLUMN_IS_ENTITY.value - 1, self.create_checkbox())
-        self.table1.setCellWidget(0, Utils.Table1ColumnOrder.COLUMN_IS_DOMAIN.value - 1, self.create_checkbox())
-        self.table1.setCellWidget(0, Utils.Table1ColumnOrder.COLUMN_IS_VIEW.value - 1, self.create_checkbox())
-        self.table1.setCellWidget(0, Utils.Table1ColumnOrder.COLUMN_IS_ALIAS_SPECIFIC.value - 1, self.create_checkbox())
+        self.table1.setCellWidget(0, Utils.Table1ColumnOrder.COLUMN_IS_ENTITY.value - 1, self.create_checkbox(0, Utils.Table1ColumnOrder.COLUMN_IS_ENTITY.value - 1, self.on_table1_state_changed))
+        self.table1.setCellWidget(0, Utils.Table1ColumnOrder.COLUMN_IS_DOMAIN.value - 1, self.create_checkbox(0, Utils.Table1ColumnOrder.COLUMN_IS_DOMAIN.value - 1, self.on_table1_state_changed))
+        self.table1.setCellWidget(0, Utils.Table1ColumnOrder.COLUMN_IS_VIEW.value - 1, self.create_checkbox(0, Utils.Table1ColumnOrder.COLUMN_IS_VIEW.value - 1, self.on_table1_state_changed))
+        self.table1.setCellWidget(0, Utils.Table1ColumnOrder.COLUMN_IS_ALIAS_SPECIFIC.value - 1, self.create_checkbox(0, Utils.Table1ColumnOrder.COLUMN_IS_ALIAS_SPECIFIC.value - 1, self.on_table1_state_changed))
                 
     
     def initialize_table2(self):
@@ -358,9 +378,9 @@ class CSV_XML_Editor(QMainWindow):
             self.T2CN.COLUMN_ALLOCATION.value           : Utils.Column(value=""         , column_name=self.T2CN.COLUMN_ALLOCATION.value      , is_pk=False   , column_type="String"),
             self.T2CN.COLUMN_DOMAIN.value               : Utils.Column(value=""         , column_name=self.T2CN.COLUMN_DOMAIN.value          , is_pk=False   , column_type="String")
         })
-        self.table2.setCellWidget(0, Utils.Table2ColumnOrder.COLUMN_PK.value - 1, self.create_checkbox())
-        self.table2.setCellWidget(0, Utils.Table2ColumnOrder.COLUMN_ALLOCATION.value - 1, self.create_dropdown(["Replicate", "Proportional"]))
-        self.table2.setCellWidget(0, Utils.Table2ColumnOrder.COLUMN_DOMAIN.value - 1, self.create_dropdown([""]))
+        self.table2.setCellWidget(0, Utils.Table2ColumnOrder.COLUMN_PK.value - 1, self.create_checkbox(0, Utils.Table2ColumnOrder.COLUMN_PK.value - 1, self.on_table2_state_changed))
+        self.table2.setCellWidget(0, Utils.Table2ColumnOrder.COLUMN_ALLOCATION.value - 1, self.create_dropdown(["Replicate", "Proportional"], self.on_table2_dropdown_changed))
+        self.table2.setCellWidget(0, Utils.Table2ColumnOrder.COLUMN_DOMAIN.value - 1, self.create_dropdown([""], self.on_table2_dropdown_changed))
 
     def on_table1_cell_changed(self, row : int, column):
         """Slot to handle cell changes in table2."""
@@ -452,10 +472,10 @@ class CSV_XML_Editor(QMainWindow):
                     self.T1CN.COLUMN_IS_ALIAS_SPECIFIC.value : Utils.Column(value="False"           , column_name=self.T1CN.COLUMN_IS_ALIAS_SPECIFIC.value  , is_pk=False   , column_type="Boolean")
                 })
 
-                self.table1.setCellWidget(row, Utils.Table1ColumnOrder.COLUMN_IS_ENTITY.value - 1, self.create_checkbox())
-                self.table1.setCellWidget(row, Utils.Table1ColumnOrder.COLUMN_IS_DOMAIN.value - 1, self.create_checkbox())
-                self.table1.setCellWidget(row, Utils.Table1ColumnOrder.COLUMN_IS_VIEW.value - 1, self.create_checkbox())
-                self.table1.setCellWidget(row, Utils.Table1ColumnOrder.COLUMN_IS_ALIAS_SPECIFIC.value - 1, self.create_checkbox())
+                self.table1.setCellWidget(row, Utils.Table1ColumnOrder.COLUMN_IS_ENTITY.value - 1, self.create_checkbox(row, Utils.Table1ColumnOrder.COLUMN_IS_ENTITY.value - 1, self.on_table1_state_changed))
+                self.table1.setCellWidget(row, Utils.Table1ColumnOrder.COLUMN_IS_DOMAIN.value - 1, self.create_checkbox(row, Utils.Table1ColumnOrder.COLUMN_IS_DOMAIN.value - 1, self.on_table1_state_changed))
+                self.table1.setCellWidget(row, Utils.Table1ColumnOrder.COLUMN_IS_VIEW.value - 1, self.create_checkbox(row, Utils.Table1ColumnOrder.COLUMN_IS_VIEW.value - 1, self.on_table1_state_changed))
+                self.table1.setCellWidget(row, Utils.Table1ColumnOrder.COLUMN_IS_ALIAS_SPECIFIC.value - 1, self.create_checkbox(row, Utils.Table1ColumnOrder.COLUMN_IS_ALIAS_SPECIFIC.value - 1, self.on_table1_state_changed))
         elif current_tab_index == 1:  # Table 2 is active
             for _ in range(row_count):
                 self.table2.insertRow(self.table2.rowCount())
@@ -469,18 +489,21 @@ class CSV_XML_Editor(QMainWindow):
                     self.T2CN.COLUMN_DOMAIN.value               : Utils.Column(value=""         , column_name=self.T2CN.COLUMN_DOMAIN.value          , is_pk=False   , column_type="String")
                 })
 
-                self.table2.setCellWidget(row, Utils.Table2ColumnOrder.COLUMN_PK.value - 1, self.create_checkbox())
-                self.table2.setCellWidget(row, Utils.Table2ColumnOrder.COLUMN_ALLOCATION.value - 1, self.create_dropdown(["Replicate", "Proportional"]))
-                self.table2.setCellWidget(row, Utils.Table2ColumnOrder.COLUMN_DOMAIN.value - 1, self.create_dropdown([""]))
+                self.table2.setCellWidget(row, Utils.Table2ColumnOrder.COLUMN_PK.value - 1, self.create_checkbox(row, Utils.Table2ColumnOrder.COLUMN_PK.value - 1, self.on_table2_state_changed))
+                self.table2.setCellWidget(row, Utils.Table2ColumnOrder.COLUMN_ALLOCATION.value - 1, self.create_dropdown(["Replicate", "Proportional"], self.on_table2_dropdown_changed))
+                self.table2.setCellWidget(row, Utils.Table2ColumnOrder.COLUMN_DOMAIN.value - 1, self.create_dropdown([""], self.on_table2_dropdown_changed))
     
-    def create_checkbox(self):
+    def create_checkbox(self, row=None, column=None, on_state_changed=None, initial_value=False):
         checkbox = QCheckBox()
+        checkbox.setChecked(initial_value)
         checkbox.setStyleSheet(
             "QCheckBox::indicator { width: 20px; height: 20px; border-radius: 3px; border: 2px solid #777; background: white; }"
             "QCheckBox::indicator:checked { background-color: #28a745; border: 2px solid #28a745; }"
             "QCheckBox::indicator:unchecked { background-color: white; border: 2px solid #777; }"
             "QCheckBox { spacing: 0px; }"
         )
+        if on_state_changed:
+            checkbox.stateChanged.connect(lambda state: on_state_changed(state, row, column))
         widget = QWidget()
         layout = QHBoxLayout(widget)
         layout.addWidget(checkbox)
@@ -489,6 +512,20 @@ class CSV_XML_Editor(QMainWindow):
         widget.setLayout(layout)
         widget.changeEvent
         return widget
+
+    def on_table1_state_changed(self, state, row, column):
+        """Handles the state change of checkboxes."""
+        print(f"Checkbox state changed to: {state} at row: {row}, column: {column}")  # Debug log
+
+        column_label = self.table1.horizontalHeaderItem(column).text()
+        CSV_XML_Editor.dm_User_Input.set_column_value_by_row_number(Utils.TabName.TAB1.value, row, column_label, "False" if state == 0 else "True")
+
+    def on_table2_state_changed(self, state, row, column):
+        """Handles the state change of checkboxes."""
+        print(f"Checkbox state changed to: {state} at row: {row}, column: {column}")  # Debug log
+
+        column_label = self.table2.horizontalHeaderItem(column).text()
+        CSV_XML_Editor.dm_User_Input.set_column_value_by_row_number(Utils.TabName.TAB2.value, row, column_label, "False" if state == 0 else "True")
     
     def refresh_dropdowns(self, EntityID : str = "", FilterValue : str = ""):
         """Refreshes all dropdowns in table2."""
@@ -500,17 +537,15 @@ class CSV_XML_Editor(QMainWindow):
 
         for row in range(self.table2.rowCount()):
             dropdown = self.table2.cellWidget(row, Utils.Table2ColumnOrder.COLUMN_DOMAIN.value - 1)
-            dropdown = self.table2.cellWidget(row, Utils.Table2ColumnOrder.COLUMN_DOMAIN.value - 1)
             currentValue = dropdown.currentText()
             if FilterValue != "" or FilterValue is None:
-                self.table2.setCellWidget(row, Utils.Table2ColumnOrder.COLUMN_DOMAIN.value - 1, self.create_dropdown(domain_values, addNone=True, currentValue=currentValue))
+                self.table2.setCellWidget(row, Utils.Table2ColumnOrder.COLUMN_DOMAIN.value - 1, self.create_dropdown(domain_values, self.on_table1_dropdown_changed, addNone=True, currentValue=currentValue))
             else:
-                self.table2.setCellWidget(row, Utils.Table2ColumnOrder.COLUMN_DOMAIN.value - 1, self.create_dropdown(domain_values, addNone=True))
-                self.table2.setCellWidget(row, Utils.Table2ColumnOrder.COLUMN_DOMAIN.value - 1, self.create_dropdown(domain_values, addNone=True))
+                self.table2.setCellWidget(row, Utils.Table2ColumnOrder.COLUMN_DOMAIN.value - 1, self.create_dropdown(domain_values, self.on_table1_dropdown_changed, addNone=True))
 
-    def create_dropdown(self, options: collections.abc.Iterable[typing.Optional[str]], addNone: bool = False, currentValue: str = ""):
+    def create_dropdown(self, options: collections.abc.Iterable[typing.Optional[str]], on_dropdown_changed=None, addNone: bool = False, currentValue: str = ""):
         dropdown = QComboBox()
-
+        
         if addNone:
             dropdown.addItem("")
 
@@ -524,7 +559,27 @@ class CSV_XML_Editor(QMainWindow):
             dropdown.setCurrentText(currentValue)
         else:
             dropdown.setCurrentText("")
+
+        dropdown.currentIndexChanged.connect(lambda: on_dropdown_changed(dropdown))
         return dropdown
+
+    def on_table1_dropdown_changed(self, dropdown):
+        """Handles the change event of dropdowns."""
+        row = self.table1.indexAt(dropdown.pos()).row()
+        column = self.table1.indexAt(dropdown.pos()).column()
+        new_value = dropdown.currentText()
+        column_label = self.table1.horizontalHeaderItem(column).text()
+        self.dm_User_Input.set_column_value_by_row_number(Utils.TabName.TAB1.value, row, column_label, new_value)
+        print(f"Dropdown changed at row {row}, column {column} to {new_value}")  # Debug log
+        
+    def on_table2_dropdown_changed(self, dropdown):
+        """Handles the change event of dropdowns."""
+        row = self.table2.indexAt(dropdown.pos()).row()
+        column = self.table2.indexAt(dropdown.pos()).column()
+        new_value = dropdown.currentText()
+        column_label = self.table2.horizontalHeaderItem(column).text()
+        self.dm_User_Input.set_column_value_by_row_number(Utils.TabName.TAB2.value, row, column_label, new_value)
+        print(f"Dropdown changed at row {row}, column {column} to {new_value}")  # Debug log
         
 
     def get_button_style(self):
