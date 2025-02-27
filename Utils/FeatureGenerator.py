@@ -2,7 +2,7 @@ import xml.etree.ElementTree as ET
 from typing import Dict, List, Optional
 from .TableModel import ModelConfiguration, Table, Row, Column, Value
 from .SQLGenerator import generate_insert_sql
-from .IMFGCore import DataType, TabName, Table1ColumnName, Table3ColumnName#, Table1ColumnType, get_DD_ModelConfiguration_Structure, DD_MODEL_FILE
+from .IMFGCore import DataType, TabName, Table1ColumnName, Table3ColumnName, Table3ColumnType#, Table1ColumnType, get_DD_ModelConfiguration_Structure, DD_MODEL_FILE
 
 AliasName = "ARoffi"
 
@@ -11,11 +11,20 @@ def add_underscore(name: str) -> str:
         return ""
     return name.replace(' ', '_')
 
-def get_physical_name(table_name: str, is_entity: bool, is_view: bool) -> str:
-    prefix = "E" if is_entity else "M"
-    if is_view:
-        prefix = "V" if is_entity else "VC"
-    return f"{prefix}_{add_underscore(table_name)}"
+def get_physical_name(table_name: str, is_entity: bool, is_view: bool, is_domain: bool) -> str:
+    if is_entity and is_domain:
+        prefix = "DOM"
+    else:
+        prefix = "E" if is_entity else "M"
+        if is_view:
+            prefix = "V" if is_entity else "VC"
+    
+    table_name_with_underscore = add_underscore(table_name)
+    
+    if table_name_with_underscore.startswith(f"{prefix}_"):
+        return table_name_with_underscore
+    else:
+        return f"{prefix}_{table_name_with_underscore}"
 
 def determine_field_type(variableCol: Dict[str, Column]) -> str:
     if variableCol[Table3ColumnName.COLUMN_IS_VARIABLE.value].get_value() == "True":
@@ -51,46 +60,67 @@ def add_ddVariables(DDModel_To_Update: ModelConfiguration, DataTUse: ModelConfig
     sequence_no = 1
     for row in tab.get_rows().values():
         columns = row.get_columns()
-        if columns[Table3ColumnName.COLUMN_IS_VARIABLE.value].get_value() == "True":
+        if columns[Table3ColumnName.COLUMN_IS_VARIABLE.value].get_value() == "True" and columns[Table3ColumnName.COLUMN_VARIABLE_NAME.value].get_value() not in [None, ""]:
             variableCol = row.get_columns()
-            DDModel_To_Update.add_row_to_table(table_name=table_name, columns={
-                    "FeatureKey":                   Column(value="@FeatureKey", column_name="FeatureKey", is_pk=True, column_type="Integer"),
-                    "VariableKey":                  Column(value=f"@VariableKey{sequence_no}", column_name="VariableKey", is_pk=True, column_type="Integer", is_identity=True),
-                    "VariableID":                   Column(value=add_underscore(variableCol[Table3ColumnName.COLUMN_VARIABLE_NAME.value].get_value()), column_name="VariableID", is_pk=False, column_type="String"),
-                    "PhysicalName":                 Column(value=add_underscore(variableCol[Table3ColumnName.COLUMN_VARIABLE_NAME.value].get_value()), column_name="PhysicalName", is_pk=False, column_type="String"),
-                    "DisplayName":                  Column(value=variableCol[Table3ColumnName.COLUMN_VARIABLE_NAME.value].get_value(), column_name="DisplayName", is_pk=False, column_type="String"),
-                    "DataType":                     Column(value=DataType.get_variable_DSType(variableCol[Table3ColumnName.COLUMN_VARIABLE_TYPE.value].get_value()).value, column_name="DataType", is_pk=False, column_type="Integer"),
-                    "Length":                       Column(value=variableCol[Table3ColumnName.COLUMN_VARIABLE_LENGHT.value].get_value(), column_name="Length", is_pk=False, column_type="Integer"),
-                    "Precision":                    Column(value=variableCol[Table3ColumnName.COLUMN_VARIABLE_PRECISION.value].get_value(), column_name="Precision", is_pk=False, column_type="Integer"),
-                    "Scale":                        Column(value=variableCol[Table3ColumnName.COLUMN_VARIABLE_SCALE.value].get_value(), column_name="Scale", is_pk=False, column_type="Integer"),
-                    "Aggregation":                  Column(value=DataType.get_variable_Aggregation(variableCol[Table3ColumnName.COLUMN_VARIABLE_TYPE.value].get_value()), column_name="Aggregation", is_pk=False, column_type="String"),
-                    "WritebackType":                Column(value="STANDARD", column_name="WritebackType", is_pk=False, column_type="String"),
-                    "Allocation":                   Column(value=DataType.get_variable_Allocation(variableCol[Table3ColumnName.COLUMN_VARIABLE_TYPE.value].get_value()), column_name="Allocation", is_pk=False, column_type="String"),
-                    "Grouping":                     Column(value="NEW VARIABLES", column_name="Grouping", is_pk=False, column_type="String"),
-                    "CRUDStatus":                   Column(value="c", column_name="CRUDStatus", is_pk=False, column_type="String")
-                })
+            add_variable(DDModel_To_Update, table_name, sequence_no, variableCol)
         sequence_no += 1
+
+def add_variable(DDModel_To_Update: ModelConfiguration, table_name: str, sequence_no: str, variableCol: Dict[str, Column]):
+    DDModel_To_Update.add_row_to_table(table_name=table_name, columns={
+                    "FeatureKey"    : Column(value="@FeatureKey",                                                                                               column_name="FeatureKey",       is_pk=True,     column_type="Integer"),
+                    "VariableKey"   : Column(value=f"@VariableKey{sequence_no}",                                                                                column_name="VariableKey",      is_pk=True,     column_type="Integer",  is_identity=True),
+                    "VariableID"    : Column(value=add_underscore(variableCol[Table3ColumnName.COLUMN_VARIABLE_NAME.value].get_value()),                        column_name="VariableID",       is_pk=False,    column_type="String"),
+                    "PhysicalName"  : Column(value=add_underscore(variableCol[Table3ColumnName.COLUMN_VARIABLE_NAME.value].get_value()),                        column_name="PhysicalName",     is_pk=False,    column_type="String"),
+                    "DisplayName"   : Column(value=variableCol[Table3ColumnName.COLUMN_VARIABLE_NAME.value].get_value(),                                        column_name="DisplayName",      is_pk=False,    column_type="String"),
+                    "DataType"      : Column(value=DataType.get_variable_DSType(variableCol[Table3ColumnName.COLUMN_VARIABLE_TYPE.value].get_value()).value,    column_name="DataType",         is_pk=False,    column_type="Integer"),
+                    "Length"        : Column(value=variableCol[Table3ColumnName.COLUMN_VARIABLE_LENGHT.value].get_value(),                                      column_name="Length",           is_pk=False,    column_type="Integer"),
+                    "Precision"     : Column(value=variableCol[Table3ColumnName.COLUMN_VARIABLE_PRECISION.value].get_value(),                                   column_name="Precision",        is_pk=False,    column_type="Integer"),
+                    "Scale"         : Column(value=variableCol[Table3ColumnName.COLUMN_VARIABLE_SCALE.value].get_value(),                                       column_name="Scale",            is_pk=False,    column_type="Integer"),
+                    "Aggregation"   : Column(value=DataType.get_variable_Aggregation(variableCol[Table3ColumnName.COLUMN_VARIABLE_TYPE.value].get_value()),     column_name="Aggregation",      is_pk=False,    column_type="String"),
+                    "WritebackType" : Column(value="STANDARD",                                                                                                  column_name="WritebackType",    is_pk=False,    column_type="String"),
+                    "Allocation"    : Column(value=DataType.get_variable_Allocation(variableCol[Table3ColumnName.COLUMN_VARIABLE_TYPE.value].get_value()),      column_name="Allocation",       is_pk=False,    column_type="String"),
+                    "Grouping"      : Column(value="NEW VARIABLES",                                                                                             column_name="Grouping",         is_pk=False,    column_type="String"),
+                    "CRUDStatus"    : Column(value="c",                                                                                                         column_name="CRUDStatus",       is_pk=False,    column_type="String")
+                })
 
 def add_ddmodeltable(DDModel_To_Update: ModelConfiguration, DataTUse: ModelConfiguration, table_name: str):
     tab = DataTUse.get_Table(table_name=TabName.TAB1.value)
     sequence_no = 1
     for row in tab.get_rows().values():
         variableCol = row.get_columns()
-        DDModel_To_Update.add_row_to_table(table_name=table_name, columns={
-                "FeatureKey":                  Column(value="@FeatureKey",                                                          column_name="FeatureKey",       is_pk=True,     column_type="Integer"),
-                "ModelTableKey":               Column(value=f"@ModelTableKey{sequence_no}",                                         column_name="ModelTableKey",    is_pk=True,     column_type="Integer",  is_identity=True),
-                "ModelID":                     Column(value=add_underscore(variableCol[Table1ColumnName.COLUMN_TABLE_NAME.value].get_value()),                  column_name="ModelID",          is_pk=False,    column_type="String"),
-                "DisplayName":                 Column(value=variableCol[Table1ColumnName.COLUMN_TABLE_NAME.value].get_value(),                                  column_name="DisplayName",      is_pk=False,    column_type="String"),
-                "PhysicalName":                Column(value=add_underscore(get_physical_name(variableCol[Table1ColumnName.COLUMN_TABLE_NAME.value].get_value(), 
-                                                                                             variableCol[Table1ColumnName.COLUMN_IS_ENTITY.value].get_value() == "True", 
-                                                                                             variableCol[Table1ColumnName.COLUMN_IS_VIEW.value].get_value() == "True")),
-                                                                                                                                    column_name="PhysicalName",     is_pk=False,    column_type="String"),
-                "Managed":                     Column(value=0 if variableCol[Table1ColumnName.COLUMN_IS_VIEW.value].get_value() == "True" else 1,                  column_name="Managed",          is_pk=False,    column_type="Integer"),
-                "ModelType":                   Column(value="ENTITY" if variableCol[Table1ColumnName.COLUMN_IS_ENTITY.value].get_value() == "True" else "DATASET", column_name="ModelType",        is_pk=False,    column_type="String"),
-                "AliasSpecific":               Column(value=1 if variableCol[Table1ColumnName.COLUMN_IS_ALIAS_SPECIFIC.value].get_value() == "True" else 0,        column_name="AliasSpecific",    is_pk=False,    column_type="Integer"),
-                "CRUDStatus":                  Column(value="c",                                                                    column_name="CRUDStatus",       is_pk=False,    column_type="String")
-            })
-        sequence_no += 1
+        if variableCol[Table1ColumnName.COLUMN_TABLE_NAME.value].get_value() not in [None, ""]:
+            add_Table(DDModel_To_Update, table_name, sequence_no, variableCol)
+            if variableCol[Table1ColumnName.COLUMN_IS_DOMAIN.value].get_value() == "True":
+                add_variable(DDModel_To_Update=DDModel_To_Update, table_name=table_name, sequence_no=f"_DOM{sequence_no}", variableCol={
+                Table3ColumnName.COLUMN_TABLE_NAME.value           : Column(value=variableCol[Table1ColumnName.COLUMN_TABLE_NAME.value].get_value()  ,                                                      column_name=Table3ColumnName.COLUMN_TABLE_NAME.value         , is_pk=True    , column_type="String"),
+                Table3ColumnName.COLUMN_VARIABLE_NAME.value        : Column(value=f"{variableCol[Table1ColumnName.COLUMN_TABLE_NAME.value].get_value()} Sequence",  column_name=Table3ColumnName.COLUMN_VARIABLE_NAME.value      , is_pk=True    , column_type="String"),
+                Table3ColumnName.COLUMN_IS_PK.value                : Column(value="False"                    ,                                                      column_name=Table3ColumnName.COLUMN_IS_PK.value              , is_pk=False   , column_type="Boolean"),
+                Table3ColumnName.COLUMN_IS_DOMAIN.value            : Column(value="False"                    ,                                                      column_name=Table3ColumnName.COLUMN_IS_DOMAIN.value          , is_pk=False   , column_type="Boolean"),
+                Table3ColumnName.COLUMN_IS_VARIABLE.value          : Column(value="True"                     ,                                                      column_name=Table3ColumnName.COLUMN_IS_VARIABLE.value        , is_pk=False   , column_type="Boolean"),
+                Table3ColumnName.COLUMN_VARIABLE_TYPE.value        : Column(value=DataType.TypeName.INTEGER.value           ,                                                      column_name=Table3ColumnName.COLUMN_VARIABLE_TYPE.value      , is_pk=False   , column_type="Integer"),
+                Table3ColumnName.COLUMN_VARIABLE_PRECISION.value   : Column(value=None                       ,                                                      column_name=Table3ColumnName.COLUMN_VARIABLE_PRECISION.value , is_pk=False   , column_type="Integer"),
+                Table3ColumnName.COLUMN_VARIABLE_SCALE.value       : Column(value=None                       ,                                                      column_name=Table3ColumnName.COLUMN_VARIABLE_SCALE.value     , is_pk=False   , column_type="Integer"),
+                Table3ColumnName.COLUMN_VARIABLE_LENGHT.value      : Column(value=None                       ,                                                      column_name=Table3ColumnName.COLUMN_VARIABLE_LENGHT.value    , is_pk=False   , column_type="Integer"),
+                Table3ColumnName.INTERN_ROW_NUMBER.value           : Column(value=0                          ,                                                      column_name=Table3ColumnName.INTERN_ROW_NUMBER.value         , is_pk=False   , column_type="Integer")
+                })
+            sequence_no += 1
+
+def add_Table(DDModel_To_Update: ModelConfiguration, table_name: str, sequence_no: int, variableCol: Dict[str, Column]):
+    DDModel_To_Update.add_row_to_table(table_name=table_name, columns={
+                    "FeatureKey":                  Column(value="@FeatureKey",                                                                                              column_name="FeatureKey",       is_pk=True,     column_type="Integer"),
+                    "ModelTableKey":               Column(value=f"@ModelTableKey{sequence_no}",                                                                             column_name="ModelTableKey",    is_pk=True,     column_type="Integer",  is_identity=True),
+                    "ModelID":                     Column(value=add_underscore(variableCol[Table1ColumnName.COLUMN_TABLE_NAME.value].get_value()),                          column_name="ModelID",          is_pk=False,    column_type="String"),
+                    "DisplayName":                 Column(value=variableCol[Table1ColumnName.COLUMN_TABLE_NAME.value].get_value(),                                          column_name="DisplayName",      is_pk=False,    column_type="String"),
+                    "PhysicalName":                Column(value=add_underscore(get_physical_name(variableCol[Table1ColumnName.COLUMN_TABLE_NAME.value].get_value(), 
+                                                                                                variableCol[Table1ColumnName.COLUMN_IS_ENTITY.value].get_value() == "True", 
+                                                                                                variableCol[Table1ColumnName.COLUMN_IS_VIEW.value].get_value() == "True", 
+                                                                                                variableCol[Table1ColumnName.COLUMN_IS_DOMAIN.value].get_value() == "True")),
+                                                                                                                                                                            column_name="PhysicalName",     is_pk=False,    column_type="String"),
+                    "Managed":                     Column(value=0 if variableCol[Table1ColumnName.COLUMN_IS_VIEW.value].get_value() == "True" else 1,                       column_name="Managed",          is_pk=False,    column_type="Integer"),
+                    "ModelType":                   Column(value="ENTITY" if variableCol[Table1ColumnName.COLUMN_IS_ENTITY.value].get_value() == "True" else "DATASET",      column_name="ModelType",        is_pk=False,    column_type="String"),
+                    "AliasSpecific":               Column(value=1 if variableCol[Table1ColumnName.COLUMN_IS_ALIAS_SPECIFIC.value].get_value() == "True" else 0,             column_name="AliasSpecific",    is_pk=False,    column_type="Integer"),
+                    "CRUDStatus":                  Column(value="c",                                                                                                        column_name="CRUDStatus",       is_pk=False,    column_type="String")
+                })
 
 def add_DDModelTableColumn(DDModel_To_Update: ModelConfiguration, DataTUse: ModelConfiguration, table_name: str):
     DDModelTable_actual = DDModel_To_Update.get_Table(table_name="DDModelTable")
@@ -126,26 +156,11 @@ def add_DDModelTableColumn(DDModel_To_Update: ModelConfiguration, DataTUse: Mode
         if field_type != "pk":
             Unique_Column_Id += f"_{reference_model_id}{"_Key" if field_type == 'entity' else ""}"
 
-        DDModel_To_Update.add_row_to_table(table_name=table_name, columns={
-                "FeatureKey":                  Column(value="@FeatureKey", column_name="FeatureKey", is_pk=True, column_type="Integer"),
-                "ModelTableKey":               Column(value=Table_ModelTableKey, column_name="ModelTableKey", is_pk=True, column_type="Integer"),
-                "ModelTableColumnKey":         Column(value=f"@ModelTableColumnKey{ModelTableColumnKey_sequence_no}", column_name="ModelTableColumnKey", is_pk=True, column_type="Integer", is_identity=True),
-                "FieldName":                   Column(value=add_underscore(variableCol[Table3ColumnName.COLUMN_VARIABLE_NAME.value].get_value()), column_name="FieldName", is_pk=False, column_type="String"),
-                "FieldType":                   Column(value=field_type, column_name="FieldType", is_pk=False, column_type="String"),
-                "ReferenceModelID":            Column(value=reference_model_id, column_name="ReferenceModelID", is_pk=False, column_type="String"),
-                "SequenceNo":                  Column(value=sequence_value, column_name="SequenceNo", is_pk=False, column_type="Integer"),
-                # "DefaultValue":                Column(value=None, column_name="DefaultValue", is_pk=False, column_type="String"),
-                # "OldFieldName":                Column(value=None, column_name="OldFieldName", is_pk=False, column_type="String"),
-                "UniqueColumnId":              Column(value=Unique_Column_Id, column_name="UniqueColumnId", is_pk=False, column_type="String"),
-                "Cardinality":                 Column(value="Many" if field_type != "pk" else None, column_name="Cardinality", is_pk=False, column_type="String"),
-                "CRUDStatus":                  Column(value="c", column_name="CRUDStatus", is_pk=False, column_type="String"),
-                "AutoFilter":                  Column(value=0, column_name="AutoFilter", is_pk=False, column_type="Integer"),
-                "AutoFilterSequence":          Column(value=0, column_name="AutoFilterSequence", is_pk=False, column_type="Integer"),
-                "NamedFilter":                 Column(value=0, column_name="NamedFilter", is_pk=False, column_type="Integer")
-            })
-        ModelTableColumnKey_sequence_no += 1
-        if field_type == "pk":
-            ModelTableKey_sequence_pk[Table_ModelTableKey] += 1
+        if variableCol[Table3ColumnName.COLUMN_VARIABLE_NAME.value].get_value() not in [None, ""]:
+            add_TableColumn(DDModel_To_Update, table_name, ModelTableColumnKey_sequence_no, Table_ModelTableKey, variableCol, field_type, sequence_value, reference_model_id, Unique_Column_Id)
+            ModelTableColumnKey_sequence_no += 1
+            if field_type == "pk":
+                ModelTableKey_sequence_pk[Table_ModelTableKey] += 1
 
     tab = DDModel_To_Update.get_Table(table_name="DDModelTable")
     if tab.get_rows() != {}:
@@ -170,6 +185,23 @@ def add_DDModelTableColumn(DDModel_To_Update: ModelConfiguration, DataTUse: Mode
                         "NamedFilter":                 Column(value=0, column_name="NamedFilter", is_pk=False, column_type="Integer")
                     })
                 ModelTableColumnKey_sequence_no += 1
+
+def add_TableColumn(DDModel_To_Update: ModelConfiguration, table_name: str, ModelTableColumnKey_sequence_no: int, Table_ModelTableKey: str, variableCol: Dict[str, Column], field_type: str, sequence_value: int, reference_model_id: str, Unique_Column_Id: str):
+    DDModel_To_Update.add_row_to_table(table_name=table_name, columns={
+                    "FeatureKey"            : Column(value="@FeatureKey",                                                                           column_name="FeatureKey",           is_pk=True,     column_type="Integer"),
+                    "ModelTableKey"         : Column(value=Table_ModelTableKey,                                                                     column_name="ModelTableKey",        is_pk=True,     column_type="Integer"),
+                    "ModelTableColumnKey"   : Column(value=f"@ModelTableColumnKey{ModelTableColumnKey_sequence_no}",                                column_name="ModelTableColumnKey",  is_pk=True,     column_type="Integer",  is_identity=True),
+                    "FieldName"             : Column(value=add_underscore(variableCol[Table3ColumnName.COLUMN_VARIABLE_NAME.value].get_value()),    column_name="FieldName",            is_pk=False,    column_type="String"),
+                    "FieldType"             : Column(value=field_type,                                                                              column_name="FieldType",            is_pk=False,    column_type="String"),
+                    "ReferenceModelID"      : Column(value=reference_model_id,                                                                      column_name="ReferenceModelID",     is_pk=False,    column_type="String"),
+                    "SequenceNo"            : Column(value=sequence_value,                                                                          column_name="SequenceNo",           is_pk=False,    column_type="Integer"),
+                    "UniqueColumnId"        : Column(value=Unique_Column_Id,                                                                        column_name="UniqueColumnId",       is_pk=False,    column_type="String"),
+                    "Cardinality"           : Column(value="Many" if field_type != "pk" else None,                                                  column_name="Cardinality",          is_pk=False,    column_type="String"),
+                    "CRUDStatus"            : Column(value="c",                                                                                     column_name="CRUDStatus",           is_pk=False,    column_type="String"),
+                    "AutoFilter"            : Column(value=0,                                                                                       column_name="AutoFilter",           is_pk=False,    column_type="Integer"),
+                    "AutoFilterSequence"    : Column(value=0,                                                                                       column_name="AutoFilterSequence",   is_pk=False,    column_type="Integer"),
+                    "NamedFilter"           : Column(value=0,                                                                                       column_name="NamedFilter",          is_pk=False,    column_type="Integer")
+                })
 
 def create_new_entry(DDModel_source: ModelConfiguration, DDModel_To_Update: ModelConfiguration, table_name: str, DataTUse: Optional[ModelConfiguration] = None):
     DDTable_source = DDModel_source.get_Table(table_name=table_name)
