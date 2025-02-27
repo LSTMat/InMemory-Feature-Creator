@@ -142,31 +142,43 @@ class Table3Dialog(QDialog):
 
         TableID: str = CSV_XML_Editor.dm_inmemory_data.get_column_values_filtered(table_name=Utils.IMConfigurationTable.MODELTABLE.value, column_name=Utils.IMConfigurationModelTable.MODELID.value, FilterColumn = Utils.IMConfigurationModelTable.PHYSICALNAME.value, FilterValue = CSV_XML_Editor.TableValue)
         
-        VariableList: List[str] = []
+        VariableListDM: List[str] = []
+        VariableListUser: List[str] = []
 
         if len(TableID) > 0:
-            VariableList = CSV_XML_Editor.dm_inmemory_data.get_column_values_filtered(table_name=Utils.IMConfigurationTable.MODELTABLECOLUMN.value, column_name=Utils.IMConfigurationModelTableColumn.FIELDNAME.value, FilterColumn = Utils.IMConfigurationModelTableColumn.MODELID.value, FilterValue = TableID[0])
-
-        if len(VariableList) > 0:
-            for i in range(len(VariableList)):
+            VariableListDM = CSV_XML_Editor.dm_inmemory_data.get_column_values_filtered(table_name=Utils.IMConfigurationTable.MODELTABLECOLUMN.value, column_name=Utils.IMConfigurationModelTableColumn.FIELDNAME.value, FilterColumn = Utils.IMConfigurationModelTableColumn.MODELID.value, FilterValue = TableID[0])
+        
+        VariableListUser = CSV_XML_Editor.dm_User_Input.get_column_values_filtered(table_name=Utils.TabName.TAB3.value, column_name=Utils.Table3ColumnName.COLUMN_VARIABLE_NAME.value, FilterColumn=Utils.Table3ColumnName.COLUMN_TABLE_NAME.value, FilterValue = CSV_XML_Editor.TableValue)
+        
+        if len(VariableListDM) > 0 and len(VariableListUser) == 0:
+            for i in range(len(VariableListDM)):
                 if i > 0:
                     self.table3.insertRow(self.table3.rowCount())
-                self.table3.setItem(i, self.T3CO.COLUMN_VARIABLE_NAME.value - 1, QTableWidgetItem(VariableList[i]))
+                self.table3.setItem(i, self.T3CO.COLUMN_VARIABLE_NAME.value - 1, QTableWidgetItem(VariableListDM[i]))
                 self.table3.setCellWidget(i, self.T3CO.COLUMN_IS_PK.value - 1, CSV_XML_Editor.create_checkbox(self))
                 self.table3.setCellWidget(i, self.T3CO.COLUMN_IS_DOMAIN.value - 1, CSV_XML_Editor.create_checkbox(self))
                 self.table3.setCellWidget(i, self.T3CO.COLUMN_IS_VARIABLE.value - 1, CSV_XML_Editor.create_checkbox(self))
                 self.table3.setCellWidget(i, self.T3CO.COLUMN_VARIABLE_TYPE.value - 1, CSV_XML_Editor.create_dropdown(self, [VT.INTEGER.value, VT.DECIMAL.value, VT.NVARCHAR.value, VT.DATE.value, VT.DATETIME.value]))
                 CSV_XML_Editor.dm_User_Input.get_Table(Utils.TabName.TAB3.value).add_row(columns={
-                    self.T3CN.COLUMN_TABLE_NAME.value           : Utils.Column(value=VariableList[i]   , column_name=self.T3CN.COLUMN_TABLE_NAME.value         , is_pk=True    , column_type="String"),
-                    self.T3CN.COLUMN_VARIABLE_NAME.value        : Utils.Column(value=""                , column_name=self.T3CN.COLUMN_VARIABLE_NAME.value      , is_pk=True    , column_type="String"),
-                    self.T3CN.COLUMN_IS_PK.value                : Utils.Column(value="False"           , column_name=self.T3CN.COLUMN_IS_PK.value              , is_pk=False   , column_type="Boolean"),
-                    self.T3CN.COLUMN_IS_DOMAIN.value            : Utils.Column(value="False"           , column_name=self.T3CN.COLUMN_IS_DOMAIN.value          , is_pk=False   , column_type="Boolean"),
-                    self.T3CN.COLUMN_IS_VARIABLE.value          : Utils.Column(value="False"           , column_name=self.T3CN.COLUMN_IS_VARIABLE.value        , is_pk=False   , column_type="Boolean"),
-                    self.T3CN.COLUMN_VARIABLE_TYPE.value        : Utils.Column(value=None              , column_name=self.T3CN.COLUMN_VARIABLE_TYPE.value      , is_pk=False   , column_type="Integer"),
-                    self.T3CN.COLUMN_VARIABLE_PRECISION.value   : Utils.Column(value=None              , column_name=self.T3CN.COLUMN_VARIABLE_PRECISION.value , is_pk=False   , column_type="Integer"),
-                    self.T3CN.COLUMN_VARIABLE_SCALE.value       : Utils.Column(value=None              , column_name=self.T3CN.COLUMN_VARIABLE_SCALE.value     , is_pk=False   , column_type="Integer"),
-                    self.T3CN.COLUMN_VARIABLE_LENGHT.value      : Utils.Column(value=None              , column_name=self.T3CN.COLUMN_VARIABLE_LENGHT.value    , is_pk=False   , column_type="Integer"),
+                    self.T3CN.COLUMN_TABLE_NAME.value           : Utils.Column(value=CSV_XML_Editor.TableValue  , column_name=self.T3CN.COLUMN_TABLE_NAME.value         , is_pk=True    , column_type="String"),
+                    self.T3CN.COLUMN_VARIABLE_NAME.value        : Utils.Column(value=VariableListDM[i]          , column_name=self.T3CN.COLUMN_VARIABLE_NAME.value      , is_pk=True    , column_type="String"),
+                    self.T3CN.COLUMN_IS_PK.value                : Utils.Column(value="False"                    , column_name=self.T3CN.COLUMN_IS_PK.value              , is_pk=False   , column_type="Boolean"),
+                    self.T3CN.COLUMN_IS_DOMAIN.value            : Utils.Column(value="False"                    , column_name=self.T3CN.COLUMN_IS_DOMAIN.value          , is_pk=False   , column_type="Boolean"),
+                    self.T3CN.COLUMN_IS_VARIABLE.value          : Utils.Column(value="False"                    , column_name=self.T3CN.COLUMN_IS_VARIABLE.value        , is_pk=False   , column_type="Boolean"),
+                    self.T3CN.COLUMN_VARIABLE_TYPE.value        : Utils.Column(value=None                       , column_name=self.T3CN.COLUMN_VARIABLE_TYPE.value      , is_pk=False   , column_type="String"),
+                    self.T3CN.COLUMN_VARIABLE_PRECISION.value   : Utils.Column(value=None                       , column_name=self.T3CN.COLUMN_VARIABLE_PRECISION.value , is_pk=False   , column_type="Integer"),
+                    self.T3CN.COLUMN_VARIABLE_SCALE.value       : Utils.Column(value=None                       , column_name=self.T3CN.COLUMN_VARIABLE_SCALE.value     , is_pk=False   , column_type="Integer"),
+                    self.T3CN.COLUMN_VARIABLE_LENGHT.value      : Utils.Column(value=None                       , column_name=self.T3CN.COLUMN_VARIABLE_LENGHT.value    , is_pk=False   , column_type="Integer"),
                 })
+        elif len(VariableListUser) > 0:
+            for i in range(len(VariableListUser)):
+                if i > 0:
+                    self.table3.insertRow(self.table3.rowCount())
+                self.table3.setItem(i, self.T3CO.COLUMN_VARIABLE_NAME.value - 1, QTableWidgetItem(VariableListUser[i]))
+                self.table3.setCellWidget(i, self.T3CO.COLUMN_IS_PK.value - 1, CSV_XML_Editor.create_checkbox(self))
+                self.table3.setCellWidget(i, self.T3CO.COLUMN_IS_DOMAIN.value - 1, CSV_XML_Editor.create_checkbox(self))
+                self.table3.setCellWidget(i, self.T3CO.COLUMN_IS_VARIABLE.value - 1, CSV_XML_Editor.create_checkbox(self))
+                self.table3.setCellWidget(i, self.T3CO.COLUMN_VARIABLE_TYPE.value - 1, CSV_XML_Editor.create_dropdown(self, [VT.INTEGER.value, VT.DECIMAL.value, VT.NVARCHAR.value, VT.DATE.value, VT.DATETIME.value]))
         else:
             CSV_XML_Editor.dm_User_Input.get_Table(Utils.TabName.TAB3.value).add_row(columns={
                 self.T3CN.COLUMN_TABLE_NAME.value           : Utils.Column(value=CSV_XML_Editor.TableValue  , column_name=self.T3CN.COLUMN_TABLE_NAME.value         , is_pk=True    , column_type="String"),
@@ -183,6 +195,7 @@ class Table3Dialog(QDialog):
             self.table3.setCellWidget(0, Utils.Table3ColumnOrder.COLUMN_IS_DOMAIN.value - 1, CSV_XML_Editor.create_checkbox(self))
             self.table3.setCellWidget(0, Utils.Table3ColumnOrder.COLUMN_IS_VARIABLE.value - 1, CSV_XML_Editor.create_checkbox(self))
             self.table3.setCellWidget(0, Utils.Table3ColumnOrder.COLUMN_VARIABLE_TYPE.value - 1, CSV_XML_Editor.create_dropdown(self, [VT.INTEGER.value, VT.DECIMAL.value, VT.NVARCHAR.value, VT.DATE.value, VT.DATETIME.value]))
+        a=1
 
     def add_rows(self):
         """Adds a specified number of rows to both tables."""
@@ -542,9 +555,12 @@ class CSV_XML_Editor(QMainWindow):
         menu.exec(self.table1.viewport().mapToGlobal(position))
 
     def open_table3_dialog(self):
-        print("Opening Table 3 dialog...")  # Debug log
-        dialog = Table3Dialog(self)
-        dialog.exec()
+        if self.dm_inmemory_data is not None:
+            print("Opening Table 3 dialog...")  # Debug log
+            dialog = Table3Dialog(self)
+            dialog.exec()
+        else:
+            print("!!!!!!!DM Configuration Missing!!!!!!!")  # Debug log
     
 if __name__ == "__main__":
     print("Starting application...")  # Debug log
