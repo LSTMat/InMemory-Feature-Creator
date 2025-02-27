@@ -280,6 +280,26 @@ class Table:
             print(f"Updated {rows_updated} row(s) where {where_column} = '{where_value}'")
 
 
+    def update_row_value_by_conditions(self, where_columns: Dict[str, str], column_name: str, new_value: str):
+        """
+        Updates all rows where `where_column` matches `where_value`, modifying given column values.
+
+        Args:
+            where_column (str): The column to filter rows by.
+            where_value (str): The value that must match in `where_column`.
+            update_columns (Dict[str, str]): Dictionary of columns to update with new values.
+        """
+        rows_updated = 0
+        for row_number, row in self._rows.items():
+            if all(row.get_column_value(col) == val for col, val in where_columns.items()):
+                self.update_row_value_by_row_number(row_number=row_number, column_name=column_name, new_value=new_value)
+                rows_updated += 1
+
+        if rows_updated == 0:
+            raise ValueError(f"No rows found matching the conditions: {where_columns}")
+        else:
+            print(f"Updated {rows_updated} row(s) matching the conditions: {where_columns}")
+            
     def update_row_values_by_condition(self, where_column: str, where_value: str, update_columns: Dict[str, str]):
         """
         Updates all rows where `where_column` matches `where_value`, modifying given column values.
@@ -299,6 +319,25 @@ class Table:
             raise ValueError(f"No rows found where {where_column} = '{where_value}'")
         else:
             print(f"Updated {rows_updated} row(s) where {where_column} = '{where_value}'")
+
+    def update_row_values_by_conditions(self, where_columns: Dict[str, str], update_columns: Dict[str, str]):
+        """
+        Updates all rows where all `where_columns` match their respective values, modifying given column values.
+
+        Args:
+            where_columns (Dict[str, str]): Dictionary of columns to filter rows by with their respective values.
+            update_columns (Dict[str, str]): Dictionary of columns to update with new values.
+        """
+        rows_updated = 0
+        for row_number, row in self._rows.items():
+            if all(row.get_column_value(col) == val for col, val in where_columns.items()):
+                self.update_row_values_by_row_number(row_number=row_number, update_columns=update_columns)
+                rows_updated += 1
+
+        if rows_updated == 0:
+            raise ValueError(f"No rows found matching the conditions: {where_columns}")
+        else:
+            print(f"Updated {rows_updated} row(s) matching the conditions: {where_columns}")
 
 @dataclass(slots=True)
 class ModelConfiguration:
@@ -381,6 +420,18 @@ class ModelConfiguration:
                 table.update_row_values_by_condition(where_column, where_value, update_columns)  # Retrieve column values from the matching table
                 return
 
+    def set_column_value_by_conditions(self, table_name: str, where_columns: Dict[str, str], column_name: str, new_value: str):
+        for table in self.Tables:
+            if table.get_table_name() == table_name:
+                table.update_row_value_by_conditions(where_columns, column_name=column_name, new_value=new_value)  # Retrieve column values from the matching table
+                return
+            
+    def set_column_values_by_conditions(self, table_name: str, where_columns: Dict[str, str], update_columns: Dict[str, str]):
+        for table in self.Tables:
+            if table.get_table_name() == table_name:
+                table.update_row_values_by_conditions(where_columns, update_columns)  # Retrieve column values from the matching table
+                return
+            
     def get_column_values_filtered(self, table_name: str, column_name: str, FilterColumn: str, FilterValue : str) -> List[str]:
         for table in self.Tables:
             if table.get_table_name() == table_name:
