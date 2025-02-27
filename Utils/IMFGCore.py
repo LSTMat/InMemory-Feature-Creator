@@ -64,6 +64,7 @@ class DataType:
     
     @staticmethod
     def get_variable_DSType(type_name: str) -> DSType:
+        type_name_upper = type_name
         return {
             DataType.TypeName.STRING.value: DataType.DSType.STRING,
             "NVARCHAR": DataType.DSType.STRING,
@@ -115,11 +116,11 @@ class DataType:
 
 
 class Table1ColumnName(Enum):
-    COLUMN_TABLE_NAME = "Table Name"
-    COLUMN_IS_ENTITY = "Is Entity"
-    COLUMN_IS_DOMAIN = "Is Domain"
-    COLUMN_IS_VIEW = "Is View"
-    COLUMN_IS_ALIAS_SPECIFIC = "Is Alias Specific"
+    COLUMN_TABLE_NAME           = "Table Name"
+    COLUMN_IS_ENTITY            = "Is Entity"
+    COLUMN_IS_DOMAIN            = "Is Domain"
+    COLUMN_IS_VIEW              = "Is View"
+    COLUMN_IS_ALIAS_SPECIFIC    = "Is Alias Specific"
 
 class Table1ColumnType(Enum):
     COLUMN_TABLE_NAME = DataType.Type.STRING
@@ -129,18 +130,18 @@ class Table1ColumnType(Enum):
     COLUMN_IS_ALIAS_SPECIFIC = DataType.Type.BOOLEAN
 
 class Table1ColumnOrder(Enum):
-    COLUMN_TABLE_NAME = 1
-    COLUMN_IS_ENTITY = 2
-    COLUMN_IS_DOMAIN = 3
-    COLUMN_IS_VIEW = 4
-    COLUMN_IS_ALIAS_SPECIFIC = 5
+    COLUMN_TABLE_NAME           = 1
+    COLUMN_IS_ENTITY            = 2
+    COLUMN_IS_DOMAIN            = 3
+    COLUMN_IS_VIEW              = 4
+    COLUMN_IS_ALIAS_SPECIFIC    = 5
 
 class Table2ColumnName(Enum):
-    COLUMN_VARIABLE_NAME = "Variable Name"
-    COLUMN_PK = "PK"
-    COLUMN_TABLE_NAME = "Table Name"
-    COLUMN_ALLOCATION = "Allocation"
-    COLUMN_DOMAIN = "Domain"
+    COLUMN_VARIABLE_NAME    = "Variable Name"
+    COLUMN_PK               = "PK"
+    COLUMN_TABLE_NAME       = "Table Name"
+    COLUMN_ALLOCATION       = "Allocation"
+    COLUMN_DOMAIN           = "Domain"
 
 class Table2ColumnType(Enum):
     COLUMN_VARIABLE_NAME = DataType.Type.STRING
@@ -150,16 +151,70 @@ class Table2ColumnType(Enum):
     COLUMN_DOMAIN = DataType.Type.STRING
 
 class Table2ColumnOrder(Enum):
-    COLUMN_VARIABLE_NAME = 1
-    COLUMN_PK = 2
-    COLUMN_TABLE_NAME = 3
-    COLUMN_ALLOCATION = 4
-    COLUMN_DOMAIN = 5
+    COLUMN_VARIABLE_NAME    = 1
+    COLUMN_PK               = 2
+    COLUMN_TABLE_NAME       = 3
+    COLUMN_ALLOCATION       = 4
+    COLUMN_DOMAIN           = 5
+
+class Table3ColumnName(Enum):
+    COLUMN_TABLE_NAME           = "Table Name"
+    COLUMN_VARIABLE_NAME        = "Variable Name"
+    COLUMN_IS_PK                = "Is PK"
+    COLUMN_IS_DOMAIN            = "Is Domain"
+    COLUMN_IS_VARIABLE          = "Is Variable"
+    COLUMN_VARIABLE_TYPE        = "Variable Type"
+    COLUMN_VARIABLE_PRECISION   = "Variable Precision"
+    COLUMN_VARIABLE_SCALE       = "Variable Scale"
+    COLUMN_VARIABLE_LENGHT      = "Variable Lenght"
+
+class Table3ColumnType(Enum):
+    COLUMN_TABLE_NAME           = DataType.Type.STRING
+    COLUMN_VARIABLE_NAME        = DataType.Type.STRING
+    COLUMN_IS_PK                = DataType.Type.BOOLEAN
+    COLUMN_IS_DOMAIN            = DataType.Type.BOOLEAN
+    COLUMN_IS_VARIABLE          = DataType.Type.BOOLEAN
+    COLUMN_VARIABLE_TYPE        = DataType.Type.STRING
+    COLUMN_VARIABLE_PRECISION   = DataType.Type.INTEGER
+    COLUMN_VARIABLE_SCALE       = DataType.Type.INTEGER
+    COLUMN_VARIABLE_LENGHT      = DataType.Type.INTEGER
+
+class Table3ColumnOrder(Enum):
+    COLUMN_TABLE_NAME           = 0
+    COLUMN_VARIABLE_NAME        = 1
+    COLUMN_IS_PK                = 2
+    COLUMN_IS_DOMAIN            = 3
+    COLUMN_IS_VARIABLE          = 4
+    COLUMN_VARIABLE_TYPE        = 5
+    COLUMN_VARIABLE_PRECISION   = 6
+    COLUMN_VARIABLE_SCALE       = 7
+    COLUMN_VARIABLE_LENGHT      = 8
+
+class VariableType(Enum):
+    INTEGER     = "INTEGER"
+    NVARCHAR    = "NVARCHAR"
+    DECIMAL     = "DECIMAL"
+    DATE        = "DATE"
+    DATETIME    = "DATETIME"
+
+class TabName(Enum):
+    TAB1    = "Tabelle"
+    TAB2    = "Calculation Plan"
+    TAB3    = "Variabili"
 
 class IMConfigurationTable(Enum):
-    DOMAIN = "DMDomain"
+    DOMAIN              = "DMDomain"
+    MODELTABLE          = "DMModelTable"
+    MODELTABLECOLUMN    = "DMModelTableColumn"
 
-class IMConfigurationTableDomain(Enum):
-    NAME = "Name"
-    ENTITYID = "EntityID"
+class IMConfigurationDomain(Enum):
+    NAME        = "Name"
+    ENTITYID    = "EntityID"
 
+class IMConfigurationModelTable(Enum):
+    MODELID         = "ModelID"
+    PHYSICALNAME    = "PhysicalName"
+
+class IMConfigurationModelTableColumn(Enum):
+    MODELID         = "ModelID"
+    FIELDNAME       = "FieldName"
