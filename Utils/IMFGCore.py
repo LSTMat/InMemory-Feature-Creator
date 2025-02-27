@@ -166,6 +166,7 @@ class Table3ColumnName(Enum):
     COLUMN_VARIABLE_PRECISION   = "Variable Precision"
     COLUMN_VARIABLE_SCALE       = "Variable Scale"
     COLUMN_VARIABLE_LENGHT      = "Variable Lenght"
+    INTERN_ROW_NUMBER           = "Row Number"
 
 class Table3ColumnType(Enum):
     COLUMN_TABLE_NAME           = DataType.Type.STRING
@@ -177,6 +178,7 @@ class Table3ColumnType(Enum):
     COLUMN_VARIABLE_PRECISION   = DataType.Type.INTEGER
     COLUMN_VARIABLE_SCALE       = DataType.Type.INTEGER
     COLUMN_VARIABLE_LENGHT      = DataType.Type.INTEGER
+    INTERN_ROW_NUMBER           = DataType.Type.INTEGER
 
 class Table3ColumnOrder(Enum):
     COLUMN_TABLE_NAME           = 0
@@ -188,6 +190,7 @@ class Table3ColumnOrder(Enum):
     COLUMN_VARIABLE_PRECISION   = 6
     COLUMN_VARIABLE_SCALE       = 7
     COLUMN_VARIABLE_LENGHT      = 8
+    INTERN_ROW_NUMBER           = 9
 
 class VariableType(Enum):
     INTEGER     = "INTEGER"

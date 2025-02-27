@@ -169,6 +169,7 @@ class Table3Dialog(QDialog):
                     self.T3CN.COLUMN_VARIABLE_PRECISION.value   : Utils.Column(value=None                       , column_name=self.T3CN.COLUMN_VARIABLE_PRECISION.value , is_pk=False   , column_type="Integer"),
                     self.T3CN.COLUMN_VARIABLE_SCALE.value       : Utils.Column(value=None                       , column_name=self.T3CN.COLUMN_VARIABLE_SCALE.value     , is_pk=False   , column_type="Integer"),
                     self.T3CN.COLUMN_VARIABLE_LENGHT.value      : Utils.Column(value=None                       , column_name=self.T3CN.COLUMN_VARIABLE_LENGHT.value    , is_pk=False   , column_type="Integer"),
+                    self.T3CN.INTERN_ROW_NUMBER.value           : Utils.Column(value=i                          , column_name=self.T3CN.INTERN_ROW_NUMBER.value         , is_pk=False   , column_type="Integer"),
                 })
         elif len(VariableListUser) > 0:
             for i in range(len(VariableListUser)):
@@ -194,6 +195,7 @@ class Table3Dialog(QDialog):
                 self.T3CN.COLUMN_VARIABLE_PRECISION.value   : Utils.Column(value=None                       , column_name=self.T3CN.COLUMN_VARIABLE_PRECISION.value , is_pk=False   , column_type="Integer"),
                 self.T3CN.COLUMN_VARIABLE_SCALE.value       : Utils.Column(value=None                       , column_name=self.T3CN.COLUMN_VARIABLE_SCALE.value     , is_pk=False   , column_type="Integer"),
                 self.T3CN.COLUMN_VARIABLE_LENGHT.value      : Utils.Column(value=None                       , column_name=self.T3CN.COLUMN_VARIABLE_LENGHT.value    , is_pk=False   , column_type="Integer"),
+                self.T3CN.INTERN_ROW_NUMBER.value           : Utils.Column(value=0                          , column_name=self.T3CN.INTERN_ROW_NUMBER.value         , is_pk=False   , column_type="Integer"),
             })
             self.table3.setCellWidget(0, Utils.Table3ColumnOrder.COLUMN_IS_PK.value - 1, CSV_XML_Editor.create_checkbox(self, 0, Utils.Table3ColumnOrder.COLUMN_IS_PK.value - 1, self.on_table3_state_changed))
             self.table3.setCellWidget(0, Utils.Table3ColumnOrder.COLUMN_IS_DOMAIN.value - 1, CSV_XML_Editor.create_checkbox(self, 0, Utils.Table3ColumnOrder.COLUMN_IS_DOMAIN.value - 1, self.on_table3_state_changed))
@@ -219,6 +221,7 @@ class Table3Dialog(QDialog):
                 self.T3CN.COLUMN_VARIABLE_PRECISION.value   : Utils.Column(value=None                       , column_name=self.T3CN.COLUMN_VARIABLE_PRECISION.value , is_pk=False   , column_type="Integer"),
                 self.T3CN.COLUMN_VARIABLE_SCALE.value       : Utils.Column(value=None                       , column_name=self.T3CN.COLUMN_VARIABLE_SCALE.value     , is_pk=False   , column_type="Integer"),
                 self.T3CN.COLUMN_VARIABLE_LENGHT.value      : Utils.Column(value=None                       , column_name=self.T3CN.COLUMN_VARIABLE_LENGHT.value    , is_pk=False   , column_type="Integer"),
+                self.T3CN.INTERN_ROW_NUMBER.value           : Utils.Column(value=row                        , column_name=self.T3CN.INTERN_ROW_NUMBER.value         , is_pk=False   , column_type="Integer"),
             })
             self.table3.setCellWidget(row, Utils.Table3ColumnOrder.COLUMN_IS_PK.value - 1, CSV_XML_Editor.create_checkbox(self, row, Utils.Table3ColumnOrder.COLUMN_IS_PK.value - 1, self.on_table3_state_changed))
             self.table3.setCellWidget(row, Utils.Table3ColumnOrder.COLUMN_IS_DOMAIN.value - 1, CSV_XML_Editor.create_checkbox(self, row, Utils.Table3ColumnOrder.COLUMN_IS_DOMAIN.value - 1, self.on_table3_state_changed))
@@ -230,14 +233,14 @@ class Table3Dialog(QDialog):
         print(f"Cell changed at row {row}, column {column}")  # Debug log
 
         column_label = self.table3.horizontalHeaderItem(column).text()
-        CSV_XML_Editor.dm_User_Input.set_column_value_by_row_number(Utils.TabName.TAB3.value, row, column_label, self.table3.item(row, column).text())
+        CSV_XML_Editor.dm_User_Input.set_column_value_by_conditions(Utils.TabName.TAB3.value, {self.T3CN.COLUMN_TABLE_NAME.value:CSV_XML_Editor.TableValue, self.T3CN.INTERN_ROW_NUMBER.value:row}, column_label, self.table3.item(row, column).text())
     
     def on_table3_state_changed(self, state, row, column):
         """Handles the state change of checkboxes."""
         print(f"Checkbox state changed to: {state} at row: {row}, column: {column}")  # Debug log
 
         column_label = self.table3.horizontalHeaderItem(column).text()
-        CSV_XML_Editor.dm_User_Input.set_column_value_by_row_number(Utils.TabName.TAB3.value, row, column_label, "False" if state == 0 else "True")
+        CSV_XML_Editor.dm_User_Input.set_column_value_by_conditions(Utils.TabName.TAB3.value, {self.T3CN.COLUMN_TABLE_NAME.value:CSV_XML_Editor.TableValue, self.T3CN.INTERN_ROW_NUMBER.value:row}, column_label, "False" if state == 0 else "True")
     
     def on_table3_dropdown_changed(self, dropdown):
         """Handles the change event of dropdowns."""
@@ -245,7 +248,7 @@ class Table3Dialog(QDialog):
         column = self.table3.indexAt(dropdown.pos()).column()
         new_value = dropdown.currentText()
         column_label = self.table3.horizontalHeaderItem(column).text()
-        CSV_XML_Editor.dm_User_Input.set_column_value_by_row_number(Utils.TabName.TAB3.value, row, column_label, new_value)
+        CSV_XML_Editor.dm_User_Input.set_column_value_by_conditions(Utils.TabName.TAB3.value, {self.T3CN.COLUMN_TABLE_NAME.value:CSV_XML_Editor.TableValue, self.T3CN.INTERN_ROW_NUMBER.value:row}, column_label, new_value)
         print(f"Dropdown changed at row {row}, column {column} to {new_value}")  # Debug log
         
     def get_button_style(self):
@@ -615,6 +618,7 @@ class CSV_XML_Editor(QMainWindow):
             dialog = Table3Dialog(self)
             dialog.exec()
         else:
+            self.show_load_xml_dialog()
             print("!!!!!!!DM Configuration Missing!!!!!!!")  # Debug log
     
 if __name__ == "__main__":
